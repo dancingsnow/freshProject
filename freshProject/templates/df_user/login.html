@@ -1,0 +1,109 @@
+{% extends 'df_user/base_bottom.html'%}
+
+{% block head %}
+	<script type="text/javascript">
+		$(function () {
+		    // 这段代码可以让django支持ajax的post请求！
+		    $.ajaxSetup({
+                   data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+              });
+			// 注意全局变量跟局部变量的关系，另外要设置在失去焦点时，再获取一次文本框的数据，这才为最终的数据，然后进行post传递。
+			// 当获得焦点时，代表还未输入完成，更没有进行判断，可以利用focus进行判断。
+		    var name = $('#username').val();
+            var pwd = $('#pwd').val();
+            $('#username').blur(function () {
+				name = $('#username').val();
+				// alert(name);
+            });
+            $('#username').focus(function () {
+				$('.user_error').css('display','none')
+            });
+            $('#pwd').blur(function () {
+				pwd = $('#pwd').val();
+            });
+            $('#pwd').focus(function () {
+				$('.pwd_error').css('display','none')
+            });
+            // 把登录改成按钮，不让form表单进行提交，利用ajax进行局部刷新。
+            // $('#login_button').click(function () {
+				// $.post('/user/login_handle/',{uname:name,upwd:pwd,test:'testdata'},function (data) {
+				// 	if (data.uname_num == 0){
+				// 		$('.user_error').css('display','inline')
+				// 	}
+				// 	else if (data.pwd_num == 0){
+				// 		$('.pwd_error').css('display','inline')
+				// 	}
+            //     })
+            // })
+
+			$('#login_form').submit(function () {
+                var stop_num = false;
+				$.ajax({
+					type: "POST",
+					url: "/user/login_handle/",
+					async: false,   // 将ajax异步改为同步请求。使得post执行完后，执行下边的语句。
+				    data: {uname:name,upwd:pwd},
+					success: function(data){
+					    // alert('请求成功！');
+					    // alert(data.uname_num);
+						if (data.uname_num == 0){
+							$('.user_error').css('display','inline');
+							// alert('服务器返回uname不存在！');
+							stop_num = false;
+						}
+						else if (data.pwd_num == 0){
+							$('.pwd_error').css('display','inline');
+							// alert('用户名正确，密码错误！');
+							stop_num = false;
+						}
+						else if (data.pwd_num == 1){
+							// alert('login succeed!');
+							stop_num = true;
+						}
+   					}
+				});
+				// alert('ajax执行完毕，弹出submit内部函数的return选项：');
+				// alert(stop_num);
+				return stop_num;
+            })
+        })
+	</script>
+{% endblock head %}
+
+{% block middle_body %}
+	<div class="login_top clearfix">
+		<a href="index.html" class="login_logo"><img src="/static/images/logo02.png"></a>
+	</div>
+
+	<div class="login_form_bg">
+		<div class="login_form_wrap clearfix">
+			<div class="login_banner fl"></div>
+			<div class="slogan fl">日夜兼程 · 急速送达</div>
+			<div class="login_form fr">
+				<div class="login_title clearfix">
+					<h1>用户登录</h1>
+					<a href="/user/register/">立即注册</a>
+				</div>
+				<div class="form_input">
+					<!--登录提交到处理的视图，然后转到用户中心界面-->
+					<form  id="login_form" action="/user/login_handle_2/" method="post">
+						<!--action="/user/login_handle/" method="post"-->
+						{% csrf_token %}
+						<input type="text" name="username" id="username" value="{{uname}}" class="name_input" placeholder="请输入用户名">
+						<div class="user_error">用户名不存在</div>
+						<input type="password" name="pwd" id="pwd" class="pass_input" placeholder="请输入密码">
+						<div class="pwd_error">密码错误</div>
+						<div class="more_input clearfix">
+							<!--当check多选框选中时，会跟着post传递数据。未选中的话，则什么都不传送-->
+							<input type="checkbox" name="remember" value="1" checked="checked">
+							<label>记住用户名</label>
+							<a href="#">忘记密码</a>
+						</div>
+						<input type="submit" value="登录" class="input_submit">
+						<!--<input type="button" id="login_button" value="登录" class="input_submit">-->
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock middle_body %}
