@@ -48,9 +48,10 @@ def login(request):
     uname = ''
     if request.COOKIES.has_key('uname'):
         uname = request.COOKIES['uname']
+    # uname = request.COOKIES.get('uname','')  # 上边可用一句话代替，第二个参数为默认值
     context = {'title':'登录','uname':uname}
     return render(request,'df_user/login.html',context)
-# 验证登录信息是否正确
+# 验证登录信息是否正确,返回json值，让form进行提交
 def login_handle(request):
     uname = request.POST['uname']
     upwd = request.POST['upwd']
@@ -88,9 +89,20 @@ def login_handle_2(request):
     remember = request.POST.get('remember',0)  # 第二个参数为设置默认值，不设置的话等同于POST['rember']
     # print('rember=',remember)
     user = UserInfo.objects.get(uname=uname)
+    # 设置session用于状态保持，只要页面没有关，都可以通过其查找对应的数据.数据是存储在
+    print('存储会话session...')
+    request.session['user_id'] = user.id
+    request.session['user_name'] = uname    # 可写可不行，可直接由id得到，但是使用量大，可以先获得，缓存起来。
+    request.session.set_expiry(0)  # 设置会话过期时间,0为浏览器关闭后清除
     uemail = user.uemail
     ucustomer = user.ucustomer
-    context1 = {'loadin': 1, 'uname': uname, 'uemail': uemail, 'ucustomer': ucustomer}
+    context1 = {
+        'title':'用户中心',
+        'loadin': 1,
+        'uname': uname,
+        'uemail': uemail,
+        'ucustomer': ucustomer
+    }
     t1 = loader.get_template('df_user/user_center_info.html')
     context2 = RequestContext(request, context1)
     response = HttpResponse(t1.render(context2))
@@ -108,18 +120,45 @@ def login_handle_2(request):
 
 
 
-
 # 用户中心界面（三合一）====================================只有第一页info显示是正常的
 def user_center_info(request):  # 默认界面-用户中心-个人信息
-    context = {'title':'用户中心','loadin':0}
+    user_id = request.session['user_id']
+    user = UserInfo.objects.get(id = user_id)
+    context = {
+        'title': '用户中心',
+        'loadin': 1,
+        'uname': user.uname,
+        'uemail': user.uemail,
+        'ucustomer': user.ucustomer
+    }
     return render(request,'df_user/user_center_info.html',context)
 
 def user_center_order(request):    # 用户中心-全部订单
-    context = {'title':'用户中心','loadin':0}
+    user = UserInfo.objects.get(id=request.session['user_id'])
+    context = {
+        'title':'用户中心',
+        'loadin':1,
+        'uname':user.uname
+    }
     return render(request,'df_user/user_center_order.html',context)
 
 def user_center_site(request):      # 用户中心-收货地址
-    context = {'title':'用户中心','loadin':0}
+    user = UserInfo.objects.get(id=request.session['user_id'])
+    if request.method == 'POST':
+        user.ucustomer = request.POST['ucustomer']
+        user.uaddr = request.POST['uaddr']
+        user.uzipcode = request.POST['uzipcode']
+        user.uphone = request.POST['uphone']
+        user.save()
+
+    context = {
+        'title':'用户中心',
+        'loadin':1,
+        'uname':user.uname,
+        'ucustomer':user.ucustomer,
+        'uaddr':user.uaddr,
+        'uzipcode':user.uzipcode,
+        'uphone':user.uphone
+    }
     return render(request,'df_user/user_center_site.html',context)
-def user_center_site_handle(request):
-    pass
+

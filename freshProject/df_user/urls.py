@@ -12,7 +12,7 @@ urlpatterns = [
 
     url(r'^user_center_info/$',views.user_center_info),  # 用户中心界面(默认为个人信息界面)
     url(r'^user_center_order/$',views.user_center_order),   # 用户中心-全部订单
-    url(r'^user_center_site/$',views.user_center_site),   # 用户中心-收货地址
-    url(r'^user_center_site_handle/$',views.user_center_site_handle),  # 用户中心-收货地址-处理提交上来的地址信息。
+    url(r'^user_center_site/$',views.user_center_site),   # 用户中心-收货地址(打开链接+处理提交的数据)
+    # url(r'^user_center_site_handle/$',views.user_center_site_handle),  # 用户中心-收货地址-处理提交上来的地址信息。
 ]
 
