@@ -13,13 +13,14 @@ class GoodsInfo(models.Model):
     gtitle = models.CharField(max_length=20) # 商品名称
     gpic = models.ImageField(upload_to='df_goods/') # 图片
     gprice = models.DecimalField(max_digits=5,decimal_places=2) # 价格
-    gunit = models.CharField(max_length=10) # 单位
+    gunit = models.CharField(max_length=10,default='500g') # 单位
     isDelete = models.BooleanField(default=False)
     gclick = models.IntegerField()  # 可以在此记录下点击量（人气），减小数据库的压力。
                                     # 如果按销量等排序，最好也建立一个字段，进行记录。
     gdesc = models.CharField(max_length=200) # 商品简介
     gdetail = HTMLField() # 可以有后台人员在admin利用富文本编辑器进行商品细节的编辑
-    gtype = models.ForeignKey(TypeInfo) # 外键，归属于哪类商品
+    gtype = models.ForeignKey('TypeInfo') # 外键，归属于哪类商品
+    # 还可以添加一个库存总数，每买走减去1.
     def __str__(self):
         return self.gtitle.encode('utf-8')
 
