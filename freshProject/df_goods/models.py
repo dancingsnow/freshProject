@@ -20,6 +20,7 @@ class GoodsInfo(models.Model):
     gdesc = models.CharField(max_length=200) # 商品简介
     gdetail = HTMLField() # 可以有后台人员在admin利用富文本编辑器进行商品细节的编辑
     gtype = models.ForeignKey('TypeInfo') # 外键，归属于哪类商品
+    gremain_num = models.IntegerField(default=1000) # 库存剩余数量
     # 还可以添加一个库存总数，每买走减去1.
     def __str__(self):
         return self.gtitle.encode('utf-8')
