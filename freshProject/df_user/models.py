@@ -15,6 +15,7 @@ class UserInfo(models.Model):
     uaddr = models.CharField(max_length=100,default='null') # 联系地址，收货地址
     uzipcode = models.CharField(max_length=6,default='null') # 邮政编码
     uphone = models.CharField(max_length=11,default='null') # 这里只针对大陆手机号，可添加加密
-
+    def __str__(self):
+        return self.uname.encode('utf-8')
 
 
