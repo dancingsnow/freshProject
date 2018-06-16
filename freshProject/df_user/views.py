@@ -120,9 +120,16 @@ def login_handle_2(request):
 
 
 
-# 用户中心界面（三合一）====================================只有第一页info显示是正常的
+# 用户中心界面（三合一）=================================
 def user_center_info(request):  # 默认界面-用户中心-个人信息
-    user_id = request.session['user_id']
+    # 防止直接链接的访问。还可以添加登陆的选项
+    try:
+        user_id = request.session['user_id']
+    except KeyError:
+        print('user_id不存在，转向登陆界面...')
+        return redirect('/user/login/')
+
+    print('打印得到的session_id',user_id)
     user = UserInfo.objects.get(id = user_id)
     context = {
         'title': '用户中心',
@@ -134,7 +141,12 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     return render(request,'df_user/user_center_info.html',context)
 
 def user_center_order(request):    # 用户中心-全部订单
-    user = UserInfo.objects.get(id=request.session['user_id'])
+    try:
+        user_id = request.session['user_id']
+    except KeyError:
+        print('user_id不存在，转向登陆界面...')
+        return redirect('/user/login/')
+    user = UserInfo.objects.get(id = user_id)
     context = {
         'title':'用户中心',
         'loadin':1,
@@ -143,14 +155,18 @@ def user_center_order(request):    # 用户中心-全部订单
     return render(request,'df_user/user_center_order.html',context)
 
 def user_center_site(request):      # 用户中心-收货地址
-    user = UserInfo.objects.get(id=request.session['user_id'])
+    try:
+        user_id = request.session['user_id']
+    except KeyError:
+        print('user_id不存在，转向登陆界面...')
+        return redirect('/user/login/')
+    user = UserInfo.objects.get(id = user_id)
     if request.method == 'POST':
         user.ucustomer = request.POST['ucustomer']
         user.uaddr = request.POST['uaddr']
         user.uzipcode = request.POST['uzipcode']
         user.uphone = request.POST['uphone']
         user.save()
-
     context = {
         'title':'用户中心',
         'loadin':1,
@@ -161,4 +177,3 @@ def user_center_site(request):      # 用户中心-收货地址
         'uphone':user.uphone
     }
     return render(request,'df_user/user_center_site.html',context)
-
