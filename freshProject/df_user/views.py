@@ -177,3 +177,8 @@ def user_center_site(request):      # 用户中心-收货地址
         'uphone':user.uphone
     }
     return render(request,'df_user/user_center_site.html',context)
+
+def login_out(request):
+    # 点击退出后，删除session
+    del request.session['user_id']
+    return redirect('/user/login/')
