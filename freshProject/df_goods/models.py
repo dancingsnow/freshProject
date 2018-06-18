@@ -15,7 +15,7 @@ class GoodsInfo(models.Model):
     gprice = models.DecimalField(max_digits=5,decimal_places=2) # 价格
     gunit = models.CharField(max_length=10,default='500g') # 单位
     isDelete = models.BooleanField(default=False)
-    gclick = models.IntegerField()  # 可以在此记录下点击量（人气），减小数据库的压力。
+    gclick = models.IntegerField(default=0)  # 可以在此记录下点击量（人气），减小数据库的压力。
                                     # 如果按销量等排序，最好也建立一个字段，进行记录。
     gdesc = models.CharField(max_length=200) # 商品简介
     gdetail = HTMLField() # 可以有后台人员在admin利用富文本编辑器进行商品细节的编辑
@@ -29,7 +29,8 @@ class GoodsInfo(models.Model):
 class Advertising(models.Model):
     aname = models.CharField(max_length=20)  # 广告名称
     apic = models.ImageField(upload_to='df_goods_adv/') # 广告的图片
-    alink = models.CharField(max_length=100,default='/adv/#') # 默认链接为/adv/数字
+    alink = models.CharField(max_length=100,default='/adv/#/') # 默认链接为/adv/数字
+    # 可以添加isDelete选项，实现广告的更换，并根据需要选择是否彻底删除之前的广告
     def __str__(self):
         return self.aname.encode('utf-8')
 

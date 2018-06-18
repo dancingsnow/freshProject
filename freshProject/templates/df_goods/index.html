@@ -5,11 +5,11 @@
 		<div class="navbar">
 			<h1 class="fl">全部商品分类</h1>
 			<ul class="navlist fl">
-				<li><a href="">首页</a></li>
+				<li><a href="/">首页</a></li>
 				<li class="interval">|</li>
-				<li><a href="">手机生鲜</a></li>
+				<li><a href="#">手机生鲜</a></li>
 				<li class="interval">|</li>
-				<li><a href="">抽奖</a></li>
+				<li><a href="#">抽奖</a></li>
 			</ul>
 		</div>
 	</div>
@@ -35,8 +35,10 @@
 			<ul class="points"></ul>
 		</div>
 		<div class="adv fl">
-			<a href="#"><img src="/static/images/adv01.jpg"></a>
-			<a href="#"><img src="/static/images/adv02.jpg"></a>
+			<a href="{{adv01_link}}"><img src="/static/media/{{adv01}}"></a>
+			<a href="{{adv02_link}}"><img src="/static/media/{{adv02}}"></a>
+			<!--<a href="#"><img src="/static/images/adv01.jpg"></a>-->
+			<!--<a href="#"><img src="/static/images/adv02.jpg"></a>-->
 		</div>
 	</div>
 
@@ -45,9 +47,11 @@
 			<h3 class="fl" id="model01">新鲜水果</h3>
 			<div class="subtitle fl">
 				<span>|</span>
-				<a href="#">鲜芒</a>
-				<a href="#">加州提子</a>
-				<a href="#">亚马逊牛油果</a>
+				{% for fruit in fruits%}
+				<a href="#">{{fruit.gtitle}}</a> <!--鲜芒 加州提子  亚马逊牛油果-->
+				<!--<a href="#"></a>-->
+				<!--<a href="#"></a>-->
+				{% endfor %}
 			</div>
 			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>

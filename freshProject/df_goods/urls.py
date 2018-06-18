@@ -6,4 +6,5 @@ urlpatterns = [
     # url(r'adv/(\d+)',views.advtising), # 广告位置
     url(r'^list/$',views.list),
     url(r'^detail/$', views.detail),
+    url(r'^adv/(\d+)/$',views.adv_link),
 ]
