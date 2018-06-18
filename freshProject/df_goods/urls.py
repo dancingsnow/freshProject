@@ -4,7 +4,7 @@ import views
 urlpatterns = [
     url(r'^$|^index/$',views.index),
     url(r'^list/$',views.list),
-    url(r'^detail/(\d+)/$', views.detail),
+    url(r'^detail/(\w+\d+)/$', views.detail), # 商品细节
     url(r'^adv/(\d+)/$',views.adv_link),  # 广告位置
 
 ]
