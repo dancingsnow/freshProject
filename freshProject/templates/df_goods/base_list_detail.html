@@ -1,0 +1,67 @@
+{% extends 'df_goods/base.html' %}
+
+{% block middle_body %}
+	<div class="navbar_con">
+		<div class="navbar clearfix">
+			<div class="subnav_con fl">
+				<h1>全部商品分类</h1>
+				<span></span>
+				<ul class="subnav">
+					<li><a href="/list/1_1_1/" class="fruit">新鲜水果</a></li>
+					<li><a href="/list/2_1_1/" class="seafood">海鲜水产</a></li>
+					<li><a href="/list/3_1_1/" class="meet">猪牛羊肉</a></li>
+					<li><a href="/list/4_1_1/" class="egg">禽类蛋品</a></li>
+					<li><a href="/list/5_1_1/" class="vegetables">新鲜蔬菜</a></li>
+					<li><a href="/list/6_1_1/" class="ice">速冻食品</a></li>
+				</ul>
+			</div>
+			<ul class="navlist fl">
+				<li><a href="/">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="/no_setting/">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="/no_setting/">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="breadcrumb">
+		<a href="/">全部分类</a>
+		<span>></span>
+		<a href="/list/{{type.id}}_1_1/">{{type.ttitle}}</a>  <!--全部分类的下肢链接-->
+        {% if link == 'detail' %}
+            <span>></span>
+		    <a id="a1">商品详情</a>  <!--id='1'设置了他自己hover不改变-->
+        {% endif %}
+	</div>
+{% block top_little_boddy %}
+
+
+<!--detail专有的商品详情的内容-->
+
+{% endblock top_little_boddy %}
+
+
+	<div class="main_wrap clearfix">
+		<div class="l_wrap fl clearfix">
+			<div class="new_goods">
+				<h3>新品推荐</h3>
+				<ul>
+					<!--新品推荐-->
+					{% for adv in goods_adv %}
+                        <li>
+                            <a href="/detail/{{adv.gtype.id}}_{{adv.id}}/"><img src="/static/media/{{adv.gpic}}"></a>
+                            <h4><a href="/detail/{{adv.gtype.id}}_{{adv.id}}/">{{adv.gtitle}}</a></h4>
+                            <div class="prize">￥{{adv.gprice}}</div>
+                        </li>
+					{% endfor %}
+				</ul>
+			</div>
+		</div>
+        {% block little_boddy %}
+
+         <!--body中的一段，为了list和detail的不相同的部分   -->
+
+        {% endblock little_boddy %}
+	</div>
+{% endblock middle_body %}

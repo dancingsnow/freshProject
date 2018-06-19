@@ -10,7 +10,7 @@
 	<script type="text/javascript" src="/static/js/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="/static/js/slide.js"></script>
     <script type="text/javascript">
-        // 为了不跟用户模块混淆，这里单独引入。
+        // 为了不跟用户模块混淆，这里单独引入。显示用户登陆状态，还是未登录状态。
         $(function () {
             function login_page() {
                 var a = {{loadin}};
@@ -27,6 +27,11 @@
             login_page()
         })
     </script>
+	{% block head %}
+
+<!--头部添加预留空间   -->
+
+	{% endblock head %}
 </head>
 <body>
 	<div class="header_con">
@@ -39,17 +44,17 @@
 					<a href="/user/login_out/"><b>退出</b></a>
 				</div>
 				<div class="login_btn fl">
-					<a href="login.html">登录</a>
+					<a href="/user/login/">登录</a>
 					<span>|</span>
-					<a href="register.html">注册</a>
+					<a href="/user/register/">注册</a>
 				</div>
 				<div class="user_link fl">
 					<span>|</span>
-					<a href="user_center_info.html">用户中心</a>
+					<a href="/user/user_center_info/">用户中心</a>
 					<span>|</span>
-					<a href="cart.html">我的购物车</a>
+					<a href="/user/cart/">我的购物车</a>
 					<span>|</span>
-					<a href="user_center_order.html">我的订单</a>
+					<a href="/user/user_center_order/">我的订单</a>
 				</div>
 			</div>
 		</div>
@@ -73,13 +78,13 @@
 {% endblock middle_body %}
 	<div class="footer">
 		<div class="foot_link">
-			<a href="#">关于我们</a>
+			<a href="/no_setting/">关于我们</a>
 			<span>|</span>
-			<a href="#">联系我们</a>
+			<a href="/no_setting/">联系我们</a>
 			<span>|</span>
-			<a href="#">招聘人才</a>
+			<a href="/no_setting/">招聘人才</a>
 			<span>|</span>
-			<a href="#">友情链接</a>
+			<a href="/no_setting/">友情链接</a>
 		</div>
 		<p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
 		<p>电话：010-****888    京ICP备*******8号</p>

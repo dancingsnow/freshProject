@@ -163,6 +163,7 @@ html,body{height:100%}
 .breadcrumb a{line-height:40px;color:#37ab40}
 .breadcrumb a:hover{color:#ff8800}
 .breadcrumb span{line-height:40px;color:#666;padding:0 5px;}
+#a1:hover{color: #37ab40}      /* 单独设置了商品详情四个字的hover事件*/
 
 
 .main_wrap{width:1200px;margin:0 auto;}
@@ -222,7 +223,7 @@ html,body{height:100%}
 .pagenation{height:32px;text-align:center;font-size:0;margin:30px auto;}
 .pagenation a{display:inline-block;border:1px solid #d2d2d2;background-color:#f8f6f7;font-size:12px;padding:7px 10px;color:#666;margin:5px}
 
-.pagenation .active{background-color:#fff;color:#43a200}
+.pagenation .active{background-color:#fff;color:#43a200;}
 
 
 /* 商品详情样式 */
@@ -254,8 +255,16 @@ html,body{height:100%}
 .goods_num .remain_num{
 	width: 200px;
     height: 52px;
-    line-height: 52px;
     margin-left: 50px;
+}
+.goods_num .remain_num2{
+	margin-top: 17px;
+}
+.goods_num .remain_num3{
+	display: none;
+	color: red;
+	font-weight: bold;
+	margin-left: -40px;
 }
 
 

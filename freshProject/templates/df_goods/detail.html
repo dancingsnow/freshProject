@@ -1,39 +1,62 @@
-{% extends 'df_goods/base.html' %}
+{% extends 'df_goods/base_list_detail.html' %}
 
-{% block middle_body %}
-	<div class="navbar_con">
-		<div class="navbar clearfix">
-			<div class="subnav_con fl">
-				<h1>全部商品分类</h1>	
-				<span></span>			
-				<ul class="subnav">
-					<li><a href="#" class="fruit">新鲜水果</a></li>
-					<li><a href="#" class="seafood">海鲜水产</a></li>
-					<li><a href="#" class="meet">猪牛羊肉</a></li>
-					<li><a href="#" class="egg">禽类蛋品</a></li>
-					<li><a href="#" class="vegetables">新鲜蔬菜</a></li>
-					<li><a href="#" class="ice">速冻食品</a></li>
-				</ul>
-			</div>
-			<ul class="navlist fl">
-				<li><a href="">首页</a></li>
-				<li class="interval">|</li>
-				<li><a href="">手机生鲜</a></li>
-				<li class="interval">|</li>
-				<li><a href="">抽奖</a></li>
-			</ul>
-		</div>
-	</div>
+{% block head %}
+<!--头部添加预留空间   -->
+	<script type="text/javascript">
+		$(function deal_num() {
+			// 这是界面加减界面的js
+			var goods_num = $('#num_id').val();
+			var price = $('#price').text();
+			var sum_money = $('#sum_money').text();
+			$('#add_num').click(function () {
+			    goods_num ++;
+			    $('#num_id').val(goods_num);
+				sum_money = (goods_num*price).toFixed(2);	//toFixed函数，限制输出的小数点后的位数！！
+				$('#sum_money').text(sum_money);
 
-	<div class="breadcrumb">
-		<a href="#">全部分类</a>
-		<span>></span>
-		<a href="#">新鲜水果</a>
-		<span>></span>
-		<a href="#">商品详情</a>
-	</div>
+			});
+			$('#sub_num').click(function () {
+				goods_num --;
+				if (goods_num <= 1) {
+					goods_num = 1;
+					$('#num_id').val(goods_num);
+					sum_money = (goods_num*price).toFixed(2);	//toFixed函数，限制输出的小数点后的位数！！
+					$('#sum_money').text(sum_money);
+				}
+				else{
+					$('#num_id').val(goods_num);
+					sum_money = (goods_num*price).toFixed(2);
+					$('#sum_money').text(sum_money);
+				}
+			})
+			$('#num_id').blur(function () {
+				// alert($.type(goods_num));
+				goods_num = $('#num_id').val();
+				var a = /^[1-9]{1}\d{0,2}$/.test(goods_num);   //注意正则的使用形式。匹配成功就结束，不会继续匹配，区分大小写 / 表达式 /
+				if (a == true) {
+					$('#wrong_msg').css('display','none');
+					sum_money = (goods_num*price).toFixed(2);
+					$('#sum_money').text(sum_money);
+				}
+				else{
+					$('#wrong_msg').css('display','inline');
+					goods_num = 1;
+					$('#num_id').val(goods_num);
+					sum_money = (goods_num*price).toFixed(2);
+					$('#sum_money').text(sum_money);
+				}
+			});
+			$('#num_id').focus(function () {
+				$('#wrong_msg').css('display','none');
+			})
 
+		});
 
+	</script>
+
+{% endblock head %}
+
+{% block top_little_boddy %}
 <!--==============================================================================================-->
 	<div class="goods_detail_con clearfix">
 		<div class="goods_detail_pic fl"><img src="/static/media/{{goods_detail.gpic}}"></div>
@@ -42,60 +65,35 @@
 			<h3>{{goods_detail.gtitle}}</h3>
 			<p>{{goods_detail.gdesc}}</p>
 			<div class="prize_bar">
-				<span class="show_pirze">¥<em>{{goods_detail.gprice}}</em></span>
+				<span class="show_pirze">¥<em id="price">{{goods_detail.gprice}}</em></span>
 				<span class="show_unit">单  位：{{goods_detail.gunit}}</span>
 			</div>
 			<div class="goods_num clearfix">
 				<div class="num_name fl">数 量：</div>
 				<div class="num_add fl">
-					<input type="text" class="num_show fl" value="1">
-					<a href="javascript:;" class="add fr">+</a>
-					<a href="javascript:;" class="minus fr">-</a>
+					<input type="text" class="num_show fl" id="num_id" value="1">
+					<a href="javascript:;" class="add fr" id="add_num">+</a>
+					<a href="javascript:;" class="minus fr" id="sub_num">-</a>
 				</div>
 			<!--==================添加一个库存展示=========================-->
-				<div class="remain_num fl">(剩余库存：{{goods_detail.gremain_num}} 件)</div>
+				<div class="remain_num fl">
+					<div class="remain_num2">(剩余库存：{{goods_detail.gremain_num}} 件)</div>
+					<div><span class="remain_num3" id="wrong_msg">请输入低于库存数量的正整数！</span></div>
+				</div>
 			<!-- ======================================================= -->
 			</div>
 
-			<div class="total">总价：<em>16.80元</em></div>
+			<div class="total">总价：<em><span id="sum_money">{{goods_detail.gprice}}</span>元</em></div>
 			<div class="operate_btn">
 				<a href="javascript:;" class="buy_btn">立即购买</a>
 				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
 			</div>
 		</div>
 	</div>
-
+{% endblock top_little_boddy %}
+<!--==================================================================================================-->
 <!--==============新品推荐栏==========================================-->
-	<div class="main_wrap clearfix">
-		<div class="l_wrap fl clearfix">
-			<!--<div class="new_goods">-->
-				<!--<h3>新品推荐</h3>-->
-				<!--<ul>-->
-					<!--<li>-->
-						<!--<a href="#"><img src="/static/images/goods/goods001.jpg"></a>-->
-						<!--<h4><a href="#">进口柠檬</a></h4>-->
-						<!--<div class="prize">￥3.90</div>-->
-					<!--</li>-->
-					<!--<li>-->
-						<!--<a href="#"><img src="/static/images/goods/goods002.jpg"></a>-->
-						<!--<h4><a href="#">玫瑰香葡萄</a></h4>-->
-						<!--<div class="prize">￥16.80</div>-->
-					<!--</li>-->
-				<!--</ul>-->
-			<!--</div>-->
-			<div class="new_goods">
-				<h3>新品推荐</h3>
-				<ul>
-					{% for adv in goods_adv %}
-					<li>
-						<a href="#"><img src="/static/media/{{adv.gpic}}"></a>
-						<h4><a href="#">{{adv.gtitle}}</a></h4>
-						<div class="prize">￥{{adv.gprice}}</div>
-					</li>
-					{% endfor %}
-				</ul>
-			</div>
-		</div>
+{% block little_boddy %}
 
 		<div class="r_wrap fr clearfix">
 			<ul class="detail_tab clearfix">
@@ -111,12 +109,10 @@
 			</div>
 
 		</div>
-	</div>
-
-{% endblock middle_body %}
-
+{% endblock little_boddy %}
+<!--==================================================================================================-->
 {% block bottom_js%}
-	<!--<div class="add_jump"></div>  &lt;!&ndash;出现在加入购物车后边的一个大圆点，不知道做什么的&ndash;&gt;-->
+	<div class="add_jump"></div>  <!--出现在加入购物车后边的一个大圆点，不知道做什么的-->
 
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;

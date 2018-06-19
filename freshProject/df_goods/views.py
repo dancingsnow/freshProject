@@ -2,6 +2,10 @@
 from django.shortcuts import render
 from django.http import *
 from .models import *
+from django.core.paginator import Paginator
+# 未设置地址的链接
+def noSetting(request):
+    return HttpResponse('这个链接还未定义！')
 
 # index首页
 def index(request):
@@ -43,49 +47,52 @@ def adv_link(request,num):
         return HttpResponse('广告跳转还未定义，为原始的‘/adv/#/‘')
 
 # list商品列表界面
-def list(request):
-    context = {'loadin':0}
-    return render(request,'df_goods/list.html',context)
-
-# 商品细节界面
-def detail(request,num):
-    # 检索得到数据，默认是按id升序排列，可以直接根据切片角标得到数据组
-    # 得到的数据按照最大的id即为最新的数据，也就是最新品，取最后两个个进行新品推荐的推送
-    typelist = TypeInfo.objects.all()
-
-    fruit_list = typelist[0].goodsinfo_set.filter(isDelete=0)
-    sea_list = typelist[1].goodsinfo_set.filter(isDelete=0)
-    meat_list = typelist[2].goodsinfo_set.filter(isDelete=0)
-    egg_list = typelist[3].goodsinfo_set.filter(isDelete=0)
-    veg_list = typelist[4].goodsinfo_set.filter(isDelete=0)
-    ice_list = typelist[5].goodsinfo_set.filter(isDelete=0)
-
-    num_id = int(num[1:])
-    if num[0] == 'a': # 1.新鲜水果fruit
-        goods_detail = fruit_list[num_id-1]
-        goods_adv = fruit_list.order_by('-id')[0:2]
-        # print('goodsADVICE:',goods_adv)
-        # print(goods_adv[0].gtitle)
-        # print(goods_adv[1].gtitle)
-    elif num[0] == 'b': # 2.海鲜水产sea
-        goods_detail = sea_list[num_id-1]
-        goods_adv = sea_list.order_by('-id')[0:2]     # django不支持倒序取，所以只能倒序排序，然后取前边两个
-    elif num[0] == 'c': # 3.猪牛羊肉meat
-        goods_detail = meat_list[num_id - 1]
-        goods_adv = meat_list.order_by('-id')[0:2]
-    elif num[0] == 'd': # 4.禽类蛋品egg
-        goods_detail = egg_list[num_id - 1]
-        goods_adv = egg_list.order_by('-id')[0:2]
-    elif num[0] == 'e': # 5.新鲜蔬菜veg
-        goods_detail = veg_list[num_id - 1]
-        goods_adv = veg_list.order_by('-id')[0:2]
-    elif num[0] == 'f': # 6.速冻食品ice
-        goods_detail = ice_list[num_id - 1]
-        goods_adv = ice_list.order_by('-id')[0:2]
+def list(request,type_num,sort_num=1,pIndex=1):
+    # 1.先得到list_id对应的分类
+    type = TypeInfo.objects.get(id=type_num)
+    # 2.1根据列表类别，得到新品推荐栏的两条数据
+    goods_adv = type.goodsinfo_set.filter(isDelete=0).order_by('-id')
+    # 2.2根据列表的类别，按着sort的排序方式进行排序,筛选出按排序的所有数据
+    if sort_num == '1': # 默认按id倒序排列
+        list_info = type.goodsinfo_set.filter(isDelete=0).order_by('-id')
+    elif sort_num == '2':  # 按价格正序排列
+        list_info = type.goodsinfo_set.filter(isDelete=0).order_by('gprice')
+    elif sort_num == '3':  # 按点击量倒序排列
+        list_info = type.goodsinfo_set.filter(isDelete=0).order_by('-gclick')
+    # 3.1根据得到的数据列表，进行分页处理
+    p = Paginator(list_info,5)  # 进行分页，每页五条数据
+    # 3.2根据传来的pindex的值，确定访问第几页的数据
+    page = p.page(int(pIndex))   # paginator负责处理进行分页，page负责每页的数据进行处理，以及上下页数据存在与否的判断！
 
     context = {
         'loadin':0,
-        'goods_detail':goods_detail,
-        'goods_adv':goods_adv,
+        'title':type.ttitle,
+        'type':type,
+        'sort_num':sort_num,
+        'goods_adv': goods_adv[0:2],
+        'p':p,  # paginator对象
+        'page':page,  # 当前页page对象
+    }
+    return render(request,'df_goods/list.html',context)
+
+# 商品细节界面
+def detail(request,type_num,goods_index):
+    type = TypeInfo.objects.get(id=type_num)  # 类别
+    goods_adv = type.goodsinfo_set.filter(isDelete=0).order_by('-id')   # 广告
+    goods_detail = type.goodsinfo_set.get(id=goods_index)    # 商品细节详情
+
+    context = {
+        'loadin':0,
+        'link':'detail',  # 为了设置链接的三段归属链接的设置（detail需要‘商品详情’这四个字）
+        'title':goods_detail.gtitle,    # 标题显示内容
+        'type':type,    # 所属类别
+        'goods_adv':goods_adv[0:2],  # 广告部分
+        'goods_detail':goods_detail,  # 具体商品的细节
+
     }
     return render(request,'df_goods/detail.html',context)
+
+
+
+
+

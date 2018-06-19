@@ -7,9 +7,9 @@
 			<ul class="navlist fl">
 				<li><a href="/">首页</a></li>
 				<li class="interval">|</li>
-				<li><a href="#">手机生鲜</a></li>
+				<li><a href="/no_setting/">手机生鲜</a></li>
 				<li class="interval">|</li>
-				<li><a href="#">抽奖</a></li>
+				<li><a href="/no_setting/">抽奖</a></li>
 			</ul>
 		</div>
 	</div>
@@ -40,42 +40,47 @@
 		</div>
 	</div>
 
+
+
+<!--水果===========================================-->
 	<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model01">新鲜水果</h3>
 			<div class="subtitle fl">
 				<span>|</span>
 				{% for fruit in fruits_word%}
-					<a href="#">{{fruit.gtitle}}</a> <!--鲜芒 加州提子  亚马逊牛油果-->
+					<a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/">{{fruit.gtitle}}</a> <!--鲜芒 加州提子  亚马逊牛油果-->
 				{% endfor %}
 			</div>
-			<a href="#" class="goods_more fr" id="fruit_more">查看更多 ></a>
+			<a href="/list/1_1_1/" class="goods_more fr" id="fruit_more">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
 			<div class="goods_banner fl"><img src="/static/images/banner01.jpg"></div>
 			<ul class="goods_list fl">
-				{% for fru in fruits %}
+				{% for fruit in fruits %}
 					<li>
-						<h4><a href="#">{{fru.gtitle}}</a></h4>
-						<a href="#"><img src="/static/media/{{fru.gpic}}"></a>
-						<div class="prize">¥ {{fru.gprice}}</div>
+						<h4><a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/">{{fruit.gtitle}}</a></h4>
+						<a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/"><img src="/static/media/{{fruit.gpic}}"></a>
+						<div class="prize">¥ {{fruit.gprice}}</div>
 					</li>
 				{% endfor %}
 			</ul>
 		</div>
 	</div>
 
+
+<!--海鲜水产===========================================-->
 	<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model02">海鲜水产</h3>
 			<div class="subtitle fl">
 				<span>|</span>
 				{% for sea in sea_word%}
-					<a href="#">{{sea.gtitle}}</a> <!-- 海鲜文字 -->
+					<a href="/detail/{{sea.gtype.id}}_{{sea.id}}/">{{sea.gtitle}}</a> <!-- 海鲜文字 -->
 				{% endfor %}
 			</div>
-			<a href="#" class="goods_more fr">查看更多 ></a>
+			<a href="/list/2_1_1/" class="goods_more fr">查看更多 ></a>
 		</div>
 
 		<div class="goods_con clearfix">
@@ -83,8 +88,8 @@
 			<ul class="goods_list fl">
 				{% for s in sea %}
 					<li>
-						<h4><a href="#">{{s.gtitle}}</a></h4>
-						<a href="#"><img src="/static/media/{{s.gpic}}"></a>
+						<h4><a href="/detail/{{s.gtype.id}}_{{s.id}}/">{{s.gtitle}}</a></h4>
+						<a href="/detail/{{s.gtype.id}}_{{s.id}}/"><img src="/static/media/{{s.gpic}}"></a>
 						<div class="prize">¥ {{s.gprice}}</div>
 					</li>
 				{% endfor %}
@@ -94,8 +99,9 @@
 
 
 <!--还有猪牛羊肉、禽类蛋品、新鲜蔬菜、速冻食品等模块，同样的方式！(这里一下直接出的模板，没有数据库内容)============================-->
-
-
+<br>
+<div style="color:red;width: 1200px;height:60px; margin: auto;text-align: center;line-height: 60px;">@!====================以下内容，无具体数据，仅为模板！====================华丽的分割线====================!@</div>
+<br>
 	<div class="list_model">
 		<div class="list_title clearfix">
 			<h3 class="fl" id="model03">猪牛羊肉</h3>
