@@ -3,7 +3,7 @@ from django.conf.urls import url,include
 import views
 
 urlpatterns = [
-    url(r'^register/$',views.register), # 注册界面
+    url(r'^register/$',views.register,name='register'), # 注册界面
     url(r'^check_uname/',views.check_uname),
     url(r'^register_handle/$',views.register_handle),
     url(r'^login/$',views.login), #　登录界面

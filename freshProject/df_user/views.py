@@ -4,6 +4,7 @@ from hashlib import sha1
 from .models import *
 from django.http import *
 from django.template import RequestContext, loader
+import user_decorator  # 登陆装饰器
 
 # 所有的url是按着寻找路径来做.render是链接文件位置。redirect是重新对url进行定向。
 
@@ -45,13 +46,21 @@ def register_handle(request):
 
 # 登陆界面
 def login(request):
+    # print('path：',request.path)
+    # print('fullpath：',request.get_full_path())
     uname = ''
     if request.COOKIES.has_key('uname'):
         uname = request.COOKIES['uname']
     # uname = request.COOKIES.get('uname','')  # 上边可用一句话代替，第二个参数为默认值
-    context = {'title':'登录','uname':uname}
-    return render(request,'df_user/login.html',context)
-# 验证登录信息是否正确,返回json值，让form进行提交
+    context1 = {'title':'登录','uname':uname}
+    # t1 = loader.get_template('df_user/login.html')
+    # context2 = RequestContext(request,context1)
+    # resp = HttpResponse(t1.render(context2))
+    # resp.set_cookie('url2',request.get_full_path())
+    # return resp
+    return render(request,'df_user/login.html',context1)
+
+# 验证登录信息是否正确(通过ajax),返回json值，让form进行提交
 def login_handle(request):
     uname = request.POST['uname']
     upwd = request.POST['upwd']
@@ -82,7 +91,9 @@ def login_handle(request):
         # print('%s登陆成功...' % test)   # 不知道为什么这里放了这个语句，就总是报错！！！！
         # 这里不能再次获取通过ajax传送过来的数据
         return JsonResponse({'pwd_num': '1'})
+
 # 通过验证,直接提交数据,进行处理。
+
 def login_handle_2(request):
     uname = request.POST['username']
     # upwd = request.POST['pwd'] #已经验证通过，密码可以不用再占用空间进行缓存了。
@@ -94,41 +105,27 @@ def login_handle_2(request):
     request.session['user_id'] = user.id
     request.session['user_name'] = uname    # 可写可不行，可直接由id得到，但是使用量大，可以先获得，缓存起来。
     request.session.set_expiry(0)  # 设置会话过期时间,0为浏览器关闭后清除
-    uemail = user.uemail
-    ucustomer = user.ucustomer
-    context1 = {
-        'title':'用户中心',
-        'loadin': 1,
-        'uname': uname,
-        'uemail': uemail,
-        'ucustomer': ucustomer
-    }
-    t1 = loader.get_template('df_user/user_center_info.html')
-    context2 = RequestContext(request, context1)
-    response = HttpResponse(t1.render(context2))
+
+    url = request.COOKIES.get('url','/')  # 得到存储的链接cookie，有返回原链接，没有回首页。
+
+    resp = HttpResponseRedirect(url)   # 要反向的地址，这里先做定义，还未return
     # 根据rember的值，进行判定是否要设置cookie进行自动填充
     # 传过来为1，那么设置cookie记住用户名。这里只负责设置，提取在登陆界面时进行使用。
-    # response = HttpResponse()
     if remember == u'1':
         print('更新cookie...')
-        response.set_cookie('uname',uname)
-    # else:     # 若是不勾选应该不从操作，不改变、也不参与cookie的内容。
-    #     print('删除刚登陆用户的cookie...')
-    #     response.delete_cookie('uname')
-    return response
-    # return render(request,'df_user/user_center_info.html',context)
-
-
+        resp.set_cookie('uname',uname)
+    return resp
 
 # 用户中心界面（三合一）=================================
+@user_decorator.login
 def user_center_info(request):  # 默认界面-用户中心-个人信息
     # 防止直接链接的访问。还可以添加登陆的选项
-    try:
-        user_id = request.session['user_id']
-    except KeyError:
-        print('user_id不存在，转向登陆界面...')
-        return redirect('/user/login/')
-
+    # try:
+    #     user_id = request.session['user_id']
+    # except KeyError:
+    #     print('user_id不存在，转向登陆界面...')
+    #     return redirect('/user/login/')
+    user_id = request.session['user_id']
     print('打印得到的session_id',user_id)
     user = UserInfo.objects.get(id = user_id)
     context = {
@@ -140,12 +137,10 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     }
     return render(request,'df_user/user_center_info.html',context)
 
-def user_center_order(request):    # 用户中心-全部订单
-    try:
-        user_id = request.session['user_id']
-    except KeyError:
-        print('user_id不存在，转向登陆界面...')
-        return redirect('/user/login/')
+ # 用户中心-全部订单
+@user_decorator.login
+def user_center_order(request):
+    user_id = request.session['user_id']
     user = UserInfo.objects.get(id = user_id)
     context = {
         'title':'用户中心',
@@ -154,12 +149,10 @@ def user_center_order(request):    # 用户中心-全部订单
     }
     return render(request,'df_user/user_center_order.html',context)
 
-def user_center_site(request):      # 用户中心-收货地址
-    try:
-        user_id = request.session['user_id']
-    except KeyError:
-        print('user_id不存在，转向登陆界面...')
-        return redirect('/user/login/')
+# 用户中心-收货地址
+@user_decorator.login
+def user_center_site(request):
+    user_id = request.session['user_id']
     user = UserInfo.objects.get(id = user_id)
     if request.method == 'POST':
         user.ucustomer = request.POST['ucustomer']
@@ -178,7 +171,14 @@ def user_center_site(request):      # 用户中心-收货地址
     }
     return render(request,'df_user/user_center_site.html',context)
 
+# 退出登陆
 def login_out(request):
     # 点击退出后，删除session
-    del request.session['user_id']
-    return redirect('/user/login/')
+    # del request.session['user_id']  # 删除服务器存储的会话
+    # del request.session['user_name']  # 这个为了安全照相，
+    # 以上两句可以直接用flush删除就行，并没有需要保存的会话数据，uname的cookie是登陆界面存的，更会话没有关系。
+    request.session.flush()  #删除当前的会话数据并删除会话的Cookie
+
+    res = HttpResponseRedirect('/')
+    res.delete_cookie('url')    # 删除存储在客户端的url的cookie
+    return res

@@ -1,14 +1,28 @@
 # coding:utf-8
-from django.shortcuts import render
+from django.shortcuts import *
 from django.http import *
 from .models import *
 from django.core.paginator import Paginator
+
 # 未设置地址的链接
 def noSetting(request):
     return HttpResponse('这个链接还未定义！')
 
+# 装饰器  ： 商品界面，进行登陆验证的界面显示的装饰器。
+def login_ensure(func):
+    def login_fun(request,*args,**kwargs):
+        if request.session.has_key('user_id'):
+            loadin = 1
+            uname = request.session.get('user_name')
+        else:
+            loadin = 0
+            uname = ''
+        return func(request, loadin, uname, *args, **kwargs)
+    return login_fun
+
 # index首页
-def index(request):
+@login_ensure
+def index(request,loadin,uname):
     adv = Advertising.objects.all()
     typelist = TypeInfo.objects.all()
     # fruits = GoodsInfo.objects.filter(isDelete=0,gtype_id=1)
@@ -24,7 +38,8 @@ def index(request):
 
     context = {
         'title':'首页',
-        'loadin':0,
+        'loadin':loadin,
+        'uname':uname,
         'adv01_link':adv[0].alink,
         'adv02_link':adv[1].alink,
         'adv01':adv[0].apic,
@@ -34,7 +49,13 @@ def index(request):
         'sea_word': sea_word[0:3],
         'sea': sea[0:4],
     }
-    return render(request,'df_goods/index.html',context)
+    # 返回数据时先把自己的url保存下来，有别的链接，则咎会被更改。然后随时可供登录页使用
+    t1 = loader.get_template('df_goods/index.html')
+    con = RequestContext(request,context)
+    resp = HttpResponse(t1.render(con))
+    resp.set_cookie('url',request.get_full_path())
+    return resp
+    # return render(request,'df_goods/index.html',context)
 
 # 两个广告位的链接
 def adv_link(request,num):
@@ -47,7 +68,8 @@ def adv_link(request,num):
         return HttpResponse('广告跳转还未定义，为原始的‘/adv/#/‘')
 
 # list商品列表界面
-def list(request,type_num,sort_num=1,pIndex=1):
+@login_ensure
+def list(request,loadin,uname,type_num,sort_num=1,pIndex=1,):
     # 1.先得到list_id对应的分类
     type = TypeInfo.objects.get(id=type_num)
     # 2.1根据列表类别，得到新品推荐栏的两条数据
@@ -65,7 +87,8 @@ def list(request,type_num,sort_num=1,pIndex=1):
     page = p.page(int(pIndex))   # paginator负责处理进行分页，page负责每页的数据进行处理，以及上下页数据存在与否的判断！
 
     context = {
-        'loadin':0,
+        'loadin':loadin,
+        'uname':uname,
         'title':type.ttitle,
         'type':type,
         'sort_num':sort_num,
@@ -73,24 +96,33 @@ def list(request,type_num,sort_num=1,pIndex=1):
         'p':p,  # paginator对象
         'page':page,  # 当前页page对象
     }
-    return render(request,'df_goods/list.html',context)
+    t1 = loader.get_template('df_goods/list.html')
+    con = RequestContext(request,context)
+    resp = HttpResponse(t1.render(con))
+    resp.set_cookie('url',request.get_full_path())
+    return resp
 
 # 商品细节界面
-def detail(request,type_num,goods_index):
+@login_ensure
+def detail(request,loadin,uname,type_num,goods_index):
     type = TypeInfo.objects.get(id=type_num)  # 类别
     goods_adv = type.goodsinfo_set.filter(isDelete=0).order_by('-id')   # 广告
     goods_detail = type.goodsinfo_set.get(id=goods_index)    # 商品细节详情
 
     context = {
-        'loadin':0,
+        'loadin':loadin,
+        'uname':uname,
         'link':'detail',  # 为了设置链接的三段归属链接的设置（detail需要‘商品详情’这四个字）
         'title':goods_detail.gtitle,    # 标题显示内容
         'type':type,    # 所属类别
         'goods_adv':goods_adv[0:2],  # 广告部分
         'goods_detail':goods_detail,  # 具体商品的细节
-
     }
-    return render(request,'df_goods/detail.html',context)
+    t1 = loader.get_template('df_goods/detail.html')
+    con = RequestContext(request,context)
+    resp = HttpResponse(t1.render(con))
+    resp.set_cookie('url',request.get_full_path())
+    return resp
 
 
 
