@@ -50,12 +50,12 @@ def index(request,loadin,uname):
         'sea': sea[0:4],
     }
     # 返回数据时先把自己的url保存下来，有别的链接，则咎会被更改。然后随时可供登录页使用
-    t1 = loader.get_template('df_goods/index.html')
-    con = RequestContext(request,context)
-    resp = HttpResponse(t1.render(con))
+    # t1 = loader.get_template('df_goods/index.html')
+    # con = RequestContext(request,context)
+    # resp = HttpResponse(t1.render(con))
+    resp = render(request,'df_goods/index.html',context)
     resp.set_cookie('url',request.get_full_path())
     return resp
-    # return render(request,'df_goods/index.html',context)
 
 # 两个广告位的链接
 def adv_link(request,num):
@@ -96,9 +96,7 @@ def list(request,loadin,uname,type_num,sort_num=1,pIndex=1,):
         'p':p,  # paginator对象
         'page':page,  # 当前页page对象
     }
-    t1 = loader.get_template('df_goods/list.html')
-    con = RequestContext(request,context)
-    resp = HttpResponse(t1.render(con))
+    resp = render(request,'df_goods/list.html',context)
     resp.set_cookie('url',request.get_full_path())
     return resp
 
@@ -108,7 +106,8 @@ def detail(request,loadin,uname,type_num,goods_index):
     type = TypeInfo.objects.get(id=type_num)  # 类别
     goods_adv = type.goodsinfo_set.filter(isDelete=0).order_by('-id')   # 广告
     goods_detail = type.goodsinfo_set.get(id=goods_index)    # 商品细节详情
-
+    goods_detail.gclick += 1  # 每进一次详情页，对应的商品的点击量增加1
+    goods_detail.save()  # 修改数据后记得保存
     context = {
         'loadin':loadin,
         'uname':uname,
@@ -118,10 +117,26 @@ def detail(request,loadin,uname,type_num,goods_index):
         'goods_adv':goods_adv[0:2],  # 广告部分
         'goods_detail':goods_detail,  # 具体商品的细节
     }
-    t1 = loader.get_template('df_goods/detail.html')
-    con = RequestContext(request,context)
-    resp = HttpResponse(t1.render(con))
+    resp = render(request,'df_goods/detail.html',context)
     resp.set_cookie('url',request.get_full_path())
+
+    # 用cookie记录下点击的内容，按照最新访问的在前，后访问在后，在用户中心展示最近浏览
+    # 因为要存储为可遍历的形式，才能输出数据，id为数字,不知道他有几位，没办法分割数据，
+    # 所以这里只能用可修改，有容易区分遍历的列表！！！
+    goods_ids = request.COOKIES.get('goods_ids','')  # 获取当地存储的商品id列表
+    goods_id = str(goods_detail.id)     # 得到现在的商品的id，转换为字符串
+    if goods_ids == '':
+        goods_ids = goods_id
+        resp.set_cookie('goods_ids',goods_ids)
+    else:
+        goods_ids2 = goods_ids.split(',')  # 把字符串按 逗号 分割成列表
+        if goods_ids2.count(goods_id) == 0:  # 如果列表里边没有
+            goods_ids2.insert(0,goods_id)  # 在列表的第0位插入新的id
+        if len(goods_ids2) > 5:
+            del goods_ids2[5:]  # 大于5，则删除5以后的，其实最大也就能删除6
+        goods_ids = ','.join(goods_ids2)  # 再将列表拼成 逗号 分割的字符串
+    # 修改完goods_ids的值，再重新写会cookie
+    resp.set_cookie('goods_ids',goods_ids)
     return resp
 
 

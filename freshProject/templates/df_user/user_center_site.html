@@ -1,5 +1,48 @@
 {% extends 'df_user/user_center_base.html' %}
+{% block head %}
+<script type="text/javascript">
+$(function () {
+    // 确认收件人信息是否可以提交的js
+    $('#form_submit').submit(function () {
+		$('#ucustomer').focus(function () {
+			$('#ucustomer2').text('（名字长度小于10）');
+        });
+		$('#uaddr').focus(function () {
+			$('#uaddr2').text('（地址长度小于100！）');
+        });
+		$('#uzipcode').focus(function () {
+			$('#uzipcode2').text('（邮编为6位数字）');
+        });
+		$('#uphone').focus(function () {
+			$('#uphone2').text('（手机号为11位）');
+        });
+        // alert(val_len);
+		var submit_on = true;
+        if ($('#ucustomer').val().length > 10) {     //length是个属性，不是方法。
+            $('#ucustomer2').html('<b style="color: red">请输入10长度以内的名字！</b>')
+			submit_on = false;
+        }
+        if ($('#uaddr').val().length > 100) {
+            $('#uaddr2').html('<b style="color: red">请输入100长度以内地址！</b>');
+            submit_on = false;
+        }
+        if ($('#uzipcode').val().length != 6) {
+            $('#uzipcode2').html('<b style="color: red">邮政编码的长度为6位数字！</b>');
+            submit_on = false;
+        }
+        if (/^1\d{10}$/.test($('#uphone').val()) != true) {
+            $('#uphone2').html('<b style="color: red">手机号为1开头的11位数字！</b>');
+            submit_on = false;
+        }
+        if (submit_on == false){
+            return false;
+		}
 
+
+    });
+})
+</script>
+{% endblock head %}
 {% block right_bar %}
 <div class="main_con clearfix">
 		<div class="left_menu_con clearfix">
@@ -17,32 +60,32 @@
 				<div class="site_con">
 					<dl>
 						<dt>当前地址：</dt>
-						<dd>{{uaddr}} ({{ucustomer}}收)  {{uphone}}</dd>
+						<dd>{{user.uaddr}} ({{user.ucustomer}}收)  {{user.uphone}}</dd>
 					</dl>					
 				</div>
 				<h3 class="common_title2">编辑地址</h3>
 				<div class="site_con">
 					<!--form提交联系人等相关地址-->
-					<form action="/user/user_center_site/" method="post">
+					<form action="/user/user_center_site/" method="post" id="form_submit">
 						{% csrf_token %}
 						<div class="form_group">
 							<label>收件人：</label>
-							<input type="text" name="ucustomer" value="{{ucustomer}}">
+							<input type="text" name="ucustomer" id="ucustomer" value="{{user.ucustomer}}"><span id="ucustomer2">(名字长度小于10)</span>
 						</div>
 						<div class="form_group form_group2">
 							<label>详细地址：</label>
-							<textarea class="site_area" name="uaddr">{{uaddr}}</textarea>  <!--html的默认标签-->
+							<textarea class="site_area" name="uaddr" id="uaddr">{{user.uaddr}}</textarea><span id="uaddr2">(地址长度小于100)</span>  <!--html的默认标签-->
 						</div>
 						<div class="form_group">
 							<label>邮编：</label>
-							<input type="text" name="uzipcode" value="{{uzipcode}}">
+							<input type="text" name="uzipcode" id="uzipcode" value="{{user.uzipcode}}"><span id="uzipcode2">(邮编为6位数字)</span>
 						</div>
 						<div class="form_group">
 							<label>手机：</label>
-							<input type="text" name="uphone" value="{{uphone}}">
+							<input type="text" name="uphone" id="uphone" value="{{user.uphone}}"><span id="uphone2">(手机号为11位)</span>
 						</div>
 
-						<input type="submit" name="" value="提交" class="info_submit">
+						<input type="submit" value="提交" class="info_submit">
 					</form>
 				</div>
 		</div>

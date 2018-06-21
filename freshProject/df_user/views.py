@@ -3,8 +3,11 @@ from django.shortcuts import render,redirect
 from hashlib import sha1
 from .models import *
 from django.http import *
-from django.template import RequestContext, loader
+import sys
+# from django.template import RequestContext, loader
 import user_decorator  # 登陆装饰器
+sys.path.append('..')
+from df_goods.models import *
 
 # 所有的url是按着寻找路径来做.render是链接文件位置。redirect是重新对url进行定向。
 
@@ -126,15 +129,26 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     #     print('user_id不存在，转向登陆界面...')
     #     return redirect('/user/login/')
     user_id = request.session['user_id']
-    print('打印得到的session_id',user_id)
-    user = UserInfo.objects.get(id = user_id)
+    user = UserInfo.objects.get(id=user_id)
+
+    # 得到浏览记录的cookie,进行界面数据的更新。
+    goods_ids = request.COOKIES.get('goods_ids','')
+    goods = []
+    if goods_ids != '':
+        goods_ids2 = goods_ids.split(',')  # 字符串分割为列表
+        print('goods_history',goods_ids2)   # 浏览过的商品id
+        for i in goods_ids2:
+            num_id = int(i)
+            goods.append(GoodsInfo.objects.filter(id=num_id)[0])  # filter得到的就是一个列表，为了提取到数据，把元素取出来，放在统一的列表中。
+        # print('goodsinfo',goods)  # 得到的数据列表
+
     context = {
         'title': '用户中心',
         'loadin': 1,
-        'uname': user.uname,
-        'uemail': user.uemail,
-        'ucustomer': user.ucustomer
+        'user': user,
+        'goods':goods,  # 浏览商品的记录
     }
+
     return render(request,'df_user/user_center_info.html',context)
 
  # 用户中心-全部订单
@@ -145,7 +159,7 @@ def user_center_order(request):
     context = {
         'title':'用户中心',
         'loadin':1,
-        'uname':user.uname
+        'user':user,
     }
     return render(request,'df_user/user_center_order.html',context)
 
@@ -155,7 +169,7 @@ def user_center_site(request):
     user_id = request.session['user_id']
     user = UserInfo.objects.get(id = user_id)
     if request.method == 'POST':
-        user.ucustomer = request.POST['ucustomer']
+        user.ucustomer = request.POST['ucustomer']   # name为键，value为值
         user.uaddr = request.POST['uaddr']
         user.uzipcode = request.POST['uzipcode']
         user.uphone = request.POST['uphone']
@@ -163,11 +177,7 @@ def user_center_site(request):
     context = {
         'title':'用户中心',
         'loadin':1,
-        'uname':user.uname,
-        'ucustomer':user.ucustomer,
-        'uaddr':user.uaddr,
-        'uzipcode':user.uzipcode,
-        'uphone':user.uphone
+        'user':user,
     }
     return render(request,'df_user/user_center_site.html',context)
 
@@ -181,4 +191,5 @@ def login_out(request):
 
     res = HttpResponseRedirect('/')
     res.delete_cookie('url')    # 删除存储在客户端的url的cookie
+    res.delete_cookie('goods_ids')
     return res

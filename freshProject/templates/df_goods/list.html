@@ -30,7 +30,7 @@
 				{% for info in page %}
 					<li>			<!--根据商品所属类别的id和自己的id得到对应详情页。-->
 						<a href="/detail/{{info.gtype.id}}_{{info.id}}/"><img src="/static/media/{{info.gpic}}"></a>
-						<h4><a href="detail.html">{{info.gtitle}}</a></h4>
+						<h4><a href="/detail/{{info.gtype.id}}_{{info.id}}/">{{info.gtitle}}</a></h4>
 						<div class="operate">
 							<span class="prize">￥{{info.gprice}}</span>
 							<span class="unit">{{info.gprice}}/{{info.gunit}}</span>
