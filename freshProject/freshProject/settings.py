@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'df_user',
     'df_goods',
     'tinymce', # 富文本编辑器
+    'df_cart',
 )
 
 MIDDLEWARE_CLASSES = (

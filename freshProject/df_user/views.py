@@ -6,7 +6,7 @@ from django.http import *
 import sys
 # from django.template import RequestContext, loader
 import user_decorator  # 登陆装饰器
-sys.path.append('..')
+# sys.path.append('..')
 from df_goods.models import *
 
 # 所有的url是按着寻找路径来做.render是链接文件位置。redirect是重新对url进行定向。

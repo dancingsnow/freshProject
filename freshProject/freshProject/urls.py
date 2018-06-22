@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^tinymce/', include('tinymce.urls')),  # 富文本编辑器
     url(r'^user/',include('df_user.urls',namespace='user')),  # 命名空间，用于反向解析地址，便于维护
     url(r'^',include('df_goods.urls')),
+    url(r'^cart/',include('df_cart.urls')), # 购物车
 ]
