@@ -112,8 +112,7 @@
 {% endblock little_boddy %}
 <!--==================================================================================================-->
 {% block bottom_js%}
-	<div class="add_jump"></div>  <!--出现在加入购物车后边的一个大圆点，不知道做什么的-->
-
+	<div class="add_jump"></div>  <!--将商品添加到购物车的动画效果-->
 	<script type="text/javascript">
 		var $add_x = $('#add_cart').offset().top;
 		var $add_y = $('#add_cart').offset().left;
@@ -121,15 +120,24 @@
 		var $to_x = $('#show_count').offset().top;
 		var $to_y = $('#show_count').offset().left;
 
-		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'})
+		$(".add_jump").css({'left':$add_y+80,'top':$add_x+10,'display':'block'});
 		$('#add_cart').click(function(){
+		    // 点加入购物车，添加到数据库数字（获得对应数据，发送）
+			var goods_id = {{goods_detail.id}};  //商品的id
+			var goods_num = $('#num_id').val();  //商品输入框的数量
+			$.get('/cart/add_goods/',{'goods_id':goods_id,'goods_num':goods_num},function (data) {
+				// alert(data.user_exist);
+				if (data.user_exist == '0'){
+					window.location.href="/user/login/"
+				}
+				$('#show_count').html(data.cart_count);
+            });
+		    // 圆点的动画
 			$(".add_jump").stop().animate({
 				'left': $to_y+7,
 				'top': $to_x+7},
 				"fast", function() {
-					$(".add_jump").fadeOut('fast',function(){
-						$('#show_count').html(2);
-					});
+					$(".add_jump").fadeOut('fast');
 			});
 		})
 	</script>

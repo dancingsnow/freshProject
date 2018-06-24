@@ -1,5 +1,27 @@
 {% extends 'df_goods/base_list_detail.html' %}
 
+{% block head %}
+<script type="text/javascript">
+	$(function () {
+	    // '+1'初始化为隐藏状态
+        $('.add_cart_ani').hide();
+        // 点击购物车图标
+		$('.add_goods').click(function () {
+            $(this).parent().next().fadeIn();  // 淡入淡出
+            $(this).parent().next().fadeOut();
+			// 点加入购物车，添加到数据库数字（获得对应数据，发送）
+			var goods_id = $(this).attr('name');  //商品的id(在家标签内，将name属性定义为了id的字符串)
+			$.get('/cart/add_goods/',{'goods_id':goods_id,'goods_num':1},function (data) {
+                if (data.user_exist == '0'){
+					window.location.href="/user/login/"   // 用于当没有用户登陆时的重定向
+				}
+				$('#show_count').html(data.cart_count);
+            });  //list界面，点一下加入购物车，默认数量加一
+		});
+    });
+	//还可添加购物车的动画
+</script>
+{% endblock head %}
 
 
 
@@ -30,12 +52,13 @@
 				{% for info in page %}
 					<li>			<!--根据商品所属类别的id和自己的id得到对应详情页。-->
 						<a href="/detail/{{info.gtype.id}}_{{info.id}}/"><img src="/static/media/{{info.gpic}}"></a>
-						<h4><a href="/detail/{{info.gtype.id}}_{{info.id}}/">{{info.gtitle}}</a></h4>
+                        <h4><a href="/detail/{{info.gtype.id}}_{{info.id}}/">{{info.gtitle}}</a></h4>
 						<div class="operate">
 							<span class="prize">￥{{info.gprice}}</span>
 							<span class="unit">{{info.gprice}}/{{info.gunit}}</span>
-							<a href="#" class="add_goods" title="加入购物车"></a>
+							<a href="javascript:;" class="add_goods" name="{{info.id}}" title="加入购物车"></a>
 						</div>
+                        <span class="add_cart_ani">+1</span>
 					</li>
 				{% endfor %}
 

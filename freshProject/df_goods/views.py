@@ -3,6 +3,7 @@ from django.shortcuts import *
 from django.http import *
 from .models import *
 from django.core.paginator import Paginator
+from df_cart.models import *
 
 # 未设置地址的链接
 def noSetting(request):
@@ -12,17 +13,21 @@ def noSetting(request):
 def login_ensure(func):
     def login_fun(request,*args,**kwargs):
         if request.session.has_key('user_id'):
+            user_id = request.session.get('user_id')
             loadin = 1
             uname = request.session.get('user_name')
+            cart_count = CartInfo.objects.filter(buy_user_id=user_id).count()
+
         else:
             loadin = 0
             uname = ''
-        return func(request, loadin, uname, *args, **kwargs)
+            cart_count = 0
+        return func(request, loadin, uname,cart_count,*args, **kwargs)
     return login_fun
 
 # index首页
 @login_ensure
-def index(request,loadin,uname):
+def index(request,loadin,uname,cart_count):
     adv = Advertising.objects.all()
     typelist = TypeInfo.objects.all()
     # fruits = GoodsInfo.objects.filter(isDelete=0,gtype_id=1)
@@ -40,6 +45,7 @@ def index(request,loadin,uname):
         'title':'首页',
         'loadin':loadin,
         'uname':uname,
+        'cart_count':cart_count,
         'adv01_link':adv[0].alink,
         'adv02_link':adv[1].alink,
         'adv01':adv[0].apic,
@@ -69,7 +75,7 @@ def adv_link(request,num):
 
 # list商品列表界面
 @login_ensure
-def list(request,loadin,uname,type_num,sort_num=1,pIndex=1,):
+def list(request,loadin,uname,cart_count,type_num,sort_num=1,pIndex=1,):
     # 1.先得到list_id对应的分类
     type = TypeInfo.objects.get(id=type_num)
     # 2.1根据列表类别，得到新品推荐栏的两条数据
@@ -89,6 +95,7 @@ def list(request,loadin,uname,type_num,sort_num=1,pIndex=1,):
     context = {
         'loadin':loadin,
         'uname':uname,
+        'cart_count':cart_count,
         'title':type.ttitle,
         'type':type,
         'sort_num':sort_num,
@@ -102,7 +109,7 @@ def list(request,loadin,uname,type_num,sort_num=1,pIndex=1,):
 
 # 商品细节界面
 @login_ensure
-def detail(request,loadin,uname,type_num,goods_index):
+def detail(request,loadin,uname,cart_count,type_num,goods_index):
     type = TypeInfo.objects.get(id=type_num)  # 类别
     goods_adv = type.goodsinfo_set.filter(isDelete=0).order_by('-id')   # 广告
     goods_detail = type.goodsinfo_set.get(id=goods_index)    # 商品细节详情
@@ -111,6 +118,7 @@ def detail(request,loadin,uname,type_num,goods_index):
     context = {
         'loadin':loadin,
         'uname':uname,
+        'cart_count':cart_count,
         'link':'detail',  # 为了设置链接的三段归属链接的设置（detail需要‘商品详情’这四个字）
         'title':goods_detail.gtitle,    # 标题显示内容
         'type':type,    # 所属类别
@@ -138,8 +146,5 @@ def detail(request,loadin,uname,type_num,goods_index):
     # 修改完goods_ids的值，再重新写会cookie
     resp.set_cookie('goods_ids',goods_ids)
     return resp
-
-
-
 
 
