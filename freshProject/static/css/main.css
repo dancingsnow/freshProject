@@ -667,3 +667,13 @@ html,body{height:100%}
 	color: red;
 	font-weight: bold
 }
+
+/*订单收货地址*/
+.order_addr{
+	height: 20px;
+	line-height: 20px;
+	border: 1px solid #ddd;
+	border-top: none;
+	padding-left: 40px;
+}
+

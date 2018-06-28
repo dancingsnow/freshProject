@@ -53,10 +53,6 @@ def add_goods(request):
 #         return JsonResponse({'cart_count': cart_count})
 
 
-
-
-
-
 # 购物车界面
 @df_user.user_decorator.login
 def cart(request):
@@ -81,3 +77,15 @@ def del_goods(request,goods_id):
     buy_goods.delete()
     print('goods has been delete!')
     return HttpResponseRedirect('/cart/')
+
+# 购买数据有变化,通过ajax的交互，修改现存的购买数量
+def change_num(request):
+    cart_id = request.GET['cart_id']
+    goods_num = request.GET['goods_num']
+    cart_info = CartInfo.objects.get(id=cart_id)
+    cart_info.buy_num = goods_num
+    cart_info.save()
+    # print(cart_info.buy_num)
+    # print('data has changed！')
+    return JsonResponse({'changed':'1'})
+

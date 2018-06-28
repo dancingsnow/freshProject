@@ -23,4 +23,6 @@ urlpatterns = [
     url(r'^user/',include('df_user.urls',namespace='user')),  # 命名空间，用于反向解析地址，便于维护
     url(r'^',include('df_goods.urls')),
     url(r'^cart/',include('df_cart.urls')), # 购物车
+    url(r'^order/',include('df_order.urls')), # 订单
+
 ]

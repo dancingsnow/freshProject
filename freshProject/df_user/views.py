@@ -3,11 +3,15 @@ from django.shortcuts import render,redirect
 from hashlib import sha1
 from .models import *
 from django.http import *
-import sys
+from df_order.models import *
+from df_goods.models import *
 # from django.template import RequestContext, loader
 import user_decorator  # 登陆装饰器
 # sys.path.append('..')
 from df_goods.models import *
+from django.core.paginator import *
+import re
+
 
 # 所有的url是按着寻找路径来做.render是链接文件位置。redirect是重新对url进行定向。
 
@@ -153,13 +157,27 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
 
  # 用户中心-全部订单
 @user_decorator.login
-def user_center_order(request):
+def user_center_order(request,pIndex):  # pIndex为页码指针
+    if pIndex == '':  # 不写页码，默认第一页
+        pIndex = 1
     user_id = request.session['user_id']
     user = UserInfo.objects.get(id = user_id)
+    order_list = user.orderinfo_set.all() # 根据用户得到所有的订单信息，再由订单信息得到具体的订单详情
+    # order_list2 = order_list[::-1]  # 反过来排序，最新的数据在第一页。(默认按得oid排序)
+    order_list3 = order_list.order_by('-otime')  # 按订单的时间倒序
+    # detail = order_list[0].orderdetailinfo_set.all()  #根据外键归类的查询方法。
+    # print(detail[0].goods.gprice)
+    # 数据展示实现分页
+    p = Paginator(order_list3,2) # 一页展示两个订单，根据这个进行分页
+    page = p.page(int(pIndex))  # 点击页码的数据
+
+
     context = {
         'title':'用户中心',
         'loadin':1,
         'user':user,
+        'p':p,
+        'page':page,
     }
     return render(request,'df_user/user_center_order.html',context)
 
@@ -174,11 +192,15 @@ def user_center_site(request):
         user.uzipcode = request.POST['uzipcode']
         user.uphone = request.POST['uphone']
         user.save()
+        url = request.COOKIES.get('url', '')  # 判断是不是订单页跳转的，是？跳回去；不是?刷新页面。
+        if re.match('/order/place_order/', url).group() != None:
+            return HttpResponseRedirect(url)
     context = {
         'title':'用户中心',
         'loadin':1,
         'user':user,
     }
+
     return render(request,'df_user/user_center_site.html',context)
 
 # 退出登陆

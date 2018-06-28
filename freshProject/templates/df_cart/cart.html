@@ -7,6 +7,7 @@
 		// alert(obj.name); 注意获取值的方法，要在对应的因为要遍历，无法用id去做，而是用传入this为obj的值的方式，进行获取
 		// console.log($(obj).next().val());
 		var goods_num =$(obj).next().val();
+		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		goods_num ++;
 		if (goods_num > 999){
 		    goods_num = 999;
@@ -15,10 +16,18 @@
 		var totle_price = goods_num * $(obj).parent().parent().prev().children().text();
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));  // 保留两位有效数字
 		totle();
+		// alert(cart_id);
+		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
+			if (data.changed != '1'){
+			    alert('数据刷新失败，请刷新界面！');
+				window.location.reload()
+			}
+        })
 	}
 // 数量减号
 	function sub_num(obj) {
 		var goods_num =$(obj).prev().val();
+		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		goods_num --;
 		if (goods_num < 1){
 			goods_num = 1
@@ -27,10 +36,16 @@
 		var totle_price = goods_num * $(obj).parent().parent().prev().children().text();
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));
 		totle();
+		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
+			if (data.changed != '1'){
+			    alert('数据刷新失败，请刷新界面！');
+				window.location.reload()
+			}
+        })
     }
 // 纠正数量输入框的输入
 	function num_input(obj){
-
+		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		if ($.isNumeric($(obj).val())){
 			if ($(obj).val() > 999){
 		        $(obj).val(999)
@@ -42,6 +57,12 @@
 		var totle_price = $(obj).val() * $(obj).parent().parent().prev().children().text();
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));
 		totle();
+		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':$(obj).val()},function (data) {
+			if (data.changed != '1'){
+			    alert('数据刷新失败，请刷新界面！');
+				window.location.reload()
+			}
+        })
 	}
 // 计算打算购买的总的数量和总价
 	function totle() {
@@ -97,6 +118,22 @@
 			// $(this).parent().parent().remove();
         //
         // })
+		var id_list = [];
+		$('#clear_account').click(function () {
+            $(':checked:not(#check_all)').each(function () {
+                id_list.push($(this).next().text());  //cart.id
+            });
+            // alert(id_list);
+            console.log(id_list);
+            if (id_list.length == 0){
+                alert('请先添加商品到购物车！');
+				window.location.replace('/');   // 没有商品在购物车，跳转到首页。
+			}
+			else {
+				window.location.replace("/order/place_order/?id_num_list="+id_list);   // 带参数的跳转
+			}
+        })
+
     });
 </script>
 {% endblock head %}
@@ -117,7 +154,7 @@
 	{% for cart in cart_info %}
 	<!--cart_info得到的是一个该用户所有添加到购物的商品的集合-->
 		<ul class="cart_list_td clearfix">
-			<li class="col01"><input type="checkbox" name="" checked="checked"></li>
+			<li class="col01"><input type="checkbox" checked="checked"><span style="display: none">{{cart.id}}</span></li>
 			<li class="col02"><img src="/static/media/{{cart.buy_goods.gpic}}"></li>
 			<li class="col03">{{cart.buy_goods.gtitle}}<br><em>{{cart.buy_goods.gprice}}元/{{cart.buy_goods.gunit}}</em></li>
 			<li class="col04">{{cart.buy_goods.gunit}}</li>
@@ -142,7 +179,7 @@
 		<li class="col01"><input type="checkbox" id="check_all" checked="checked"></li>
 		<li class="col02">全选</li>
 		<li class="col03">合计(不含运费)：<span>¥</span><em id="sum_money">0</em><br>共计<b id="goods_count">0</b>件商品</li>
-		<li class="col04"><a href="place_order.html">去结算</a></li>
+		<li class="col04"><a href="javascript:;" id="clear_account">去结算</a></li>
 	</ul>
 
 {% endblock right_bar %}
