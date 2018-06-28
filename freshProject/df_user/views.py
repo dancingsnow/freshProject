@@ -133,6 +133,7 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     #     print('user_id不存在，转向登陆界面...')
     #     return redirect('/user/login/')
     user_id = request.session['user_id']
+    uname = request.session.get('user_name')
     user = UserInfo.objects.get(id=user_id)
 
     # 得到浏览记录的cookie,进行界面数据的更新。
@@ -149,6 +150,7 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     context = {
         'title': '用户中心',
         'loadin': 1,
+        'uname':uname,
         'user': user,
         'goods':goods,  # 浏览商品的记录
     }
@@ -161,6 +163,7 @@ def user_center_order(request,pIndex):  # pIndex为页码指针
     if pIndex == '':  # 不写页码，默认第一页
         pIndex = 1
     user_id = request.session['user_id']
+    uname = request.session.get('user_name')
     user = UserInfo.objects.get(id = user_id)
     order_list = user.orderinfo_set.all() # 根据用户得到所有的订单信息，再由订单信息得到具体的订单详情
     # order_list2 = order_list[::-1]  # 反过来排序，最新的数据在第一页。(默认按得oid排序)
@@ -175,6 +178,7 @@ def user_center_order(request,pIndex):  # pIndex为页码指针
     context = {
         'title':'用户中心',
         'loadin':1,
+        'uname':uname,
         'user':user,
         'p':p,
         'page':page,
@@ -185,6 +189,7 @@ def user_center_order(request,pIndex):  # pIndex为页码指针
 @user_decorator.login
 def user_center_site(request):
     user_id = request.session['user_id']
+    uname = request.session.get('user_name')
     user = UserInfo.objects.get(id = user_id)
     if request.method == 'POST':
         user.ucustomer = request.POST['ucustomer']   # name为键，value为值
@@ -198,6 +203,7 @@ def user_center_site(request):
     context = {
         'title':'用户中心',
         'loadin':1,
+        'uname':uname,
         'user':user,
     }
 

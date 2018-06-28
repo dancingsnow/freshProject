@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'tinymce', # 富文本编辑器
     'df_cart',
     'df_order',
+    'haystack', # 属于一种全文检索的框架，为支持whoosh等所搜引擎。
 )
 
 MIDDLEWARE_CLASSES = (
@@ -125,3 +126,16 @@ TINYMCE_DEFAULT_CONFIG = {
     'width': 600,
     'height': 400,
 }
+
+# 全文检索，搜索引擎
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
+    }
+}
+#自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+
+

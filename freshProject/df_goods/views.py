@@ -4,6 +4,7 @@ from django.http import *
 from .models import *
 from django.core.paginator import Paginator
 from df_cart.models import *
+from haystack.views import SearchView
 
 # 未设置地址的链接
 def noSetting(request):
@@ -147,4 +148,23 @@ def detail(request,loadin,uname,cart_count,type_num,goods_index):
     resp.set_cookie('goods_ids',goods_ids)
     return resp
 
+@login_ensure
+def context_handle(request,loadin, uname,cart_count,):
+    return loadin, uname,cart_count
 
+
+
+# 根据haystack自己定义的检索的视图
+class MySearchView(SearchView):
+    def extra_context(self):  # 额外的上下文数据
+        context = super(MySearchView,self).extra_context()
+        context['title'] = '搜索'
+        context['loadin'] = context_handle(self.request)[0]
+        context['uname'] = context_handle(self.request)[1]
+        context['cart_count'] = context_handle(self.request)[2]
+        return context
+    def create_response(self): # 重写了response，详见源代码
+        context = self.get_context()
+        resp = render(self.request,self.template,context)
+        resp.set_cookie('url',self.request.get_full_path()) # 搜索到登陆，跳回原结果
+        return resp
