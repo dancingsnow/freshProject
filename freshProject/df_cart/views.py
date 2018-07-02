@@ -57,6 +57,7 @@ def add_goods(request):
 @df_user.user_decorator.login
 def cart(request):
     userid = request.session.get('user_id','')  # user_name
+    uname = request.session['user_name']
     # user_name = request.session.get('user_name')  可以在此直接得到用户名就行，但是模板
     # 定义为user.uname没办法传递，所以再根据id查了一下名字（缺点是增加了数据库的工作量）
     user = UserInfo.objects.get(id=userid) # 得到用户相关信息
@@ -65,7 +66,7 @@ def cart(request):
     context = {
         'loadin':1,
         'title':'购物车',
-        'user':user, # 用于头部信息的展示
+        'uname':uname, # 用于头部信息的展示
         'cart_info':cart_info, # 从数据库查询到的添加到购物车的数据
     }
     return render(request,'df_cart/cart.html',context)

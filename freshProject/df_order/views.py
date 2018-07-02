@@ -31,9 +31,11 @@ def place_order(request):
     # print(cart_list)
 
     user = UserInfo.objects.get(id=request.session['user_id'])  # user_name
+    uname = request.session.get('user_name')
     context = {
         'title':'提交订单',
         'loadin':1,
+        'uname':uname,
         'user':user,
         'cart_list':cart_list,
     }
