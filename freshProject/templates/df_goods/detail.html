@@ -48,7 +48,13 @@
 			});
 			$('#num_id').focus(function () {
 				$('#wrong_msg').css('display','none');
-			})
+			});
+			$('#buy').click(function () {
+				var goods_id = {{goods_detail.id}};
+				var goods_num = $('#num_id').val();
+				window.location.replace("/order/place_order/?goods_id="+goods_id+'&goods_num='+goods_num);   // 带参数的跳转
+
+            })
 
 		});
 
@@ -85,7 +91,7 @@
 
 			<div class="total">总价：<em><span id="sum_money">{{goods_detail.gprice}}</span>元</em></div>
 			<div class="operate_btn">
-				<a href="javascript:;" class="buy_btn">立即购买</a>
+				<a href="javascript:;" class="buy_btn" id="buy">立即购买</a>
 				<a href="javascript:;" class="add_cart" id="add_cart">加入购物车</a>
 			</div>
 		</div>

@@ -67,6 +67,8 @@ def login(request):
     # return resp
     return render(request,'df_user/login.html',context1)
 
+'''
+# ajax+form框的验证方式
 # 验证登录信息是否正确(通过ajax),返回json值，让form进行提交
 def login_handle(request):
     uname = request.POST['uname']
@@ -122,6 +124,44 @@ def login_handle_2(request):
         print('更新cookie...')
         resp.set_cookie('uname',uname)
     return resp
+'''
+
+# 利用ajax加上前端页面跳转，进行实现。
+def login_handle_3(request):
+    uname = request.POST['uname']
+    upwd = request.POST['upwd']
+    remember = request.POST.get('remember',0)  # 第二个参数为设置默认值，不设置的话等同于POST['rember']
+    url = request.COOKIES.get('url','/')  # 得到存储的链接cookie，有返回原链接，没有回首页。
+    print('name=%s , pwd=%s' % (uname, upwd))
+
+    count = UserInfo.objects.filter(uname=uname).count()  # filter若获取不到为空[]
+    # print('过滤到的名字的数量：',count)
+    if count == 0:
+        print('不存在传来的uname！')
+        return JsonResponse({'uname_num': '0'})  # 0代表用户名不存在
+    user = UserInfo.objects.get(uname=uname)  # 上边已经确定存在，这里直接获取就行。
+    upwd1 = user.upwd
+    # 对得到的用户密码进行sha1加密，并与upwd1进行对比
+    m = sha1()
+    m.update(upwd)  # 注意是变量还是字符串
+    upwd2 = m.hexdigest()
+    if upwd2 != upwd1:
+        print('用户名正确，但是密码错误！')
+        return JsonResponse({'pwd_num': '0'})  # 0代表密码错误
+    else:
+        print('登陆成功！')
+        resp = JsonResponse({'pwd_num': '1','url':url})
+        request.session['user_id'] = user.id
+        request.session['user_name'] = uname  # 可写可不行，可直接由id得到，但是使用量大，可以先获得，缓存起来。
+        request.session.set_expiry(0)  # 设置会话过期时间,0为浏览器关闭后清除
+        if remember == u'1':
+            print('更新cookie、设置session...')
+            resp.set_cookie('uname', uname)
+        else:
+            resp.delete_cookie('uname') # 有删除；没有的话，什么也不发生。
+        return resp
+
+
 
 # 用户中心界面（三合一）=================================
 @user_decorator.login

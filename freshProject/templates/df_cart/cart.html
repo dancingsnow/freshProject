@@ -7,7 +7,7 @@
 		// alert(obj.name); 注意获取值的方法，要在对应的因为要遍历，无法用id去做，而是用传入this为obj的值的方式，进行获取
 		// console.log($(obj).next().val());
 		var goods_num =$(obj).next().val();
-		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
+		// var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		goods_num ++;
 		if (goods_num > 999){
 		    goods_num = 999;
@@ -17,17 +17,20 @@
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));  // 保留两位有效数字
 		totle();
 		// alert(cart_id);
-		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
-			if (data.changed != '1'){
-			    alert('数据刷新失败，请刷新界面！');
-				window.location.reload()
-			}
-        })
+
+		// ajax变更数据库内购买商品的数据
+        // $.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
+			// if (data.changed != '1'){
+			//     alert('数据刷新失败，请刷新界面！');
+			// 	window.location.reload()
+			// }
+        // })
+
 	}
 // 数量减号
 	function sub_num(obj) {
 		var goods_num =$(obj).prev().val();
-		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
+		// var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		goods_num --;
 		if (goods_num < 1){
 			goods_num = 1
@@ -36,16 +39,17 @@
 		var totle_price = goods_num * $(obj).parent().parent().prev().children().text();
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));
 		totle();
-		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
-			if (data.changed != '1'){
-			    alert('数据刷新失败，请刷新界面！');
-				window.location.reload()
-			}
-        })
+
+        // $.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':goods_num},function (data) {
+			// if (data.changed != '1'){
+			//     alert('数据刷新失败，请刷新界面！');
+			// 	window.location.reload()
+			// }
+        // })
     }
 // 纠正数量输入框的输入
 	function num_input(obj){
-		var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
+		// var cart_id = $(obj).parent().parent().prevAll('.col01').children('span').text();
 		if ($.isNumeric($(obj).val())){
 			if ($(obj).val() > 999){
 		        $(obj).val(999)
@@ -57,16 +61,15 @@
 		var totle_price = $(obj).val() * $(obj).parent().parent().prev().children().text();
 		$(obj).parent().parent().next().children().text(totle_price.toFixed(2));
 		totle();
-		$.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':$(obj).val()},function (data) {
-			if (data.changed != '1'){
-			    alert('数据刷新失败，请刷新界面！');
-				window.location.reload()
-			}
-        })
+        // $.get('/cart/change_num/',{'cart_id':cart_id,'goods_num':$(obj).val()},function (data) {
+			// if (data.changed != '1'){
+			//     alert('数据刷新失败，请刷新界面！');
+			// 	window.location.reload()
+			// }
+        // })
 	}
 // 计算打算购买的总的数量和总价
 	function totle() {
-	    var totle_price
 		var sum_money = 0;
 		var goods_count = 0;
 		$(':checked:not(#check_all)').each(function () {
@@ -112,19 +115,26 @@
         });
         //点击了删除按钮。首先，删除界面的一条数据；然后，通过ajax删除数据库内的存储
 		// ajax注意通讯后的数据刷新的问题。
-        // $('.col08').children().click(function () {
-			// var goods_id = $(this).next().text();
-			// $.get('/cart/del_goods/',{'del_goods':1,'goods_id':goods_id});  //发送删除商品。非重要数据，直接get就行
-			// $(this).parent().parent().remove();
-        //
-        // })
-		var id_list = [];
+        $('.col08').children().click(function () {
+			var goods_id = $(this).next().text();
+			$.get('/cart/del_goods/',{'del_goods':1,'goods_id':goods_id});  //发送删除商品。非重要数据，直接get就行
+			$(this).parent().parent().remove();
+
+        });
+        var id_list = [];
+		// var data = '';
 		$('#clear_account').click(function () {
+
             $(':checked:not(#check_all)').each(function () {
-                id_list.push($(this).next().text());  //cart.id
+                // id_list.push($(this).next().text());  //cart.id
+				var goods_num =$(this).parent().nextAll('.col06').children().children('.num_show').val();
+                var cart_id = $(this).next().text();
+                id_list.push(cart_id+'*'+goods_num)
+                // data += {'cart_id':cart_id,'goods_num':goods_num}
             });
             // alert(id_list);
-            console.log(id_list);
+            // console.log(id_list);
+
             if (id_list.length == 0){
                 alert('请先添加商品到购物车！');
 				window.location.replace('/');   // 没有商品在购物车，跳转到首页。

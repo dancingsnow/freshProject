@@ -36,13 +36,19 @@
             //     })
             // })
 
-			$('#login_form').submit(function () {
+			$('#login').click(function () {
                 var stop_num = false;
+				var remember = 1;
+				if ($('#remember').prop('checked') != true){
+				    remember = 0
+				};
+				// alert(remember);
 				$.ajax({
 					type: "POST",
-					url: "/user/login_handle/",
+					// url: "/user/login_handle/",  // 用与ajax+post验证方式
+					url: "/user/login_handle_3/",
 					async: false,   // 将ajax异步改为同步请求。使得post执行完后，执行下边的语句。
-				    data: {uname:name,upwd:pwd},
+				    data: {uname:name,upwd:pwd,remember:remember},
 					success: function(data){
 					    // alert('请求成功！');
 					    // alert(data.uname_num);
@@ -58,6 +64,8 @@
 						}
 						else if (data.pwd_num == 1){
 							// alert('login succeed!');
+							var url = data.url;
+							window.location.replace(url);  // 跳转页面
 							stop_num = true;
 						}
    					}
@@ -86,7 +94,7 @@
 				</div>
 				<div class="form_input">
 					<!--登录提交到处理的视图，然后转到用户中心界面-->
-					<form  id="login_form" action="/user/login_handle_2/" method="post">
+					<!--<form  id="login_form" action="/user/login_handle_2/" method="post">-->
 						<!--action="/user/login_handle/" method="post"-->
 						{% csrf_token %}
 						<input type="text" name="username" id="username" value="{{uname}}" class="name_input" placeholder="请输入用户名">
@@ -95,13 +103,13 @@
 						<div class="pwd_error">密码错误</div>
 						<div class="more_input clearfix">
 							<!--当check多选框选中时，会跟着post传递数据。未选中的话，则什么都不传送-->
-							<input type="checkbox" name="remember" value="1" checked="checked">
+							<input type="checkbox" name="remember" id="remember" value="1" checked="checked">
 							<label>记住用户名</label>
 							<a href="/no_setting/">忘记密码</a>
 						</div>
-						<input type="submit" value="登录" class="input_submit">
+						<input type="button" id="login" value="登录" class="input_submit">
 						<!--<input type="button" id="login_button" value="登录" class="input_submit">-->
-					</form>
+					<!--</form>-->
 				</div>
 			</div>
 		</div>

@@ -4,6 +4,7 @@ from django.http import *
 from .models import *
 from df_user.models import *
 from df_cart.models import *
+from df_goods.models import *
 import df_user
 from django.db import transaction
 from datetime import datetime
@@ -23,15 +24,62 @@ def place_order(request):
     #         cart_list.append(CartInfo.objects.get(id=id_num))
     #     # print(cart_list)
     #     return JsonResponse({'get_id':'1'})
-    id_num_list1 = request.GET['id_num_list']   #得到的是一个逗号分割的Unicode编码的字符串  u'27,28,30'
-    id_num_list2 = id_num_list1.encode('utf-8').split(',')   # 传过来的数据为Unicode格式
-    cart_list = []
-    for i in id_num_list2:
-        cart_list.append(CartInfo.objects.get(id=int(i)))
-    # print(cart_list)
-
+###########################################################################################################
+    # id_num_list1 = request.GET['id_num_list']   #得到的是一个逗号分割的Unicode编码的字符串  u'27,28,30'
+    # id_num_list2 = id_num_list1.encode('utf-8').split(',')   # 传过来的数据为Unicode格式
+    # cart_list = []
+    # for i in id_num_list2:
+    #     cart_list.append(CartInfo.objects.get(id=int(i)))
+    # # print(cart_list)
+    #
+    # user = UserInfo.objects.get(id=request.session['user_id'])  # user_name
+    # uname = request.session.get('user_name')
+    # context = {
+    #     'title':'提交订单',
+    #     'loadin':1,
+    #     'uname':uname,
+    #     'user':user,
+    #     'cart_list':cart_list,
+    # }
+    # resp = render(request,'df_order/place_order.html',context)
+    # resp.set_cookie('url',request.get_full_path())  # 为了修改地址后可以跳回来
+    # return resp
+###########################################################################################################
+    # 利用提交订单时将界面的cart_id,cart_num提交，到后台修改数据库的num数据，然后返回界面。
+    #在完全分离的情况下，还可以直接由前端携带界面数据跳转界面，然后在通过ajax的到具体的界面数据。
     user = UserInfo.objects.get(id=request.session['user_id'])  # user_name
     uname = request.session.get('user_name')
+    cart_list = []
+    goods_id = request.GET.get('goods_id','')
+    if goods_id != '':
+        cart = CartInfo()
+        cart.buy_goods = GoodsInfo.objects.get(id=goods_id)
+        cart.buy_num = request.GET['goods_num']
+        cart.buy_user = user
+        cart.save()
+        cart_list.append(cart)
+
+    else:
+        id_num_list1 = request.GET['id_num_list'].encode('utf-8')  # 得到的是一个逗号分割的Unicode编码的字符串  u'27,28,30'
+        print(id_num_list1)  # 数据格式：41*3,42*3,43*3
+        id_num_list2 = id_num_list1.split(',')  # 得到的数据格式：['41*3','42*3']
+
+
+        for i in id_num_list2:
+            print(i)
+            data = i.split('*')  # 数据格式：['41','3']
+            print(data)
+            cart_id = int(data[0])
+            cart_num = int(data[1])
+            cart_info = CartInfo.objects.get(id=cart_id)
+            cart_info.buy_num = cart_num  # 修改数据库内存储的购买数量
+            cart_info.save()
+            print('buy_num has changed...')
+            cart_list.append(cart_info)
+            # print(cart_list)
+
+
+
     context = {
         'title':'提交订单',
         'loadin':1,
@@ -40,7 +88,7 @@ def place_order(request):
         'cart_list':cart_list,
     }
     resp = render(request,'df_order/place_order.html',context)
-    resp.set_cookie('url',request.get_full_path())  # 为了修改地址后可以跳回来
+    resp.set_cookie('url',request.get_full_path())  # 为了修改收货地址后可以跳回来
     return resp
 
 # <QueryDict: {u'id_list[]': [u'27', u'28', u'29', u'30']}>
