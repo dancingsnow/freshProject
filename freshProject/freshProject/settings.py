@@ -85,7 +85,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'USER':'root',  # 超级管理员的登陆，也可选择自己的账户登陆
-        'PASSWORD':'aijia512',  # 各自的密码别记混了
+        'PASSWORD':'******',  # 各自的密码别记混了
         'HOST':'localhost',
         'PORT':'3306',
         'NAME': 'dailyfresh', # 所使用数据库的名字！
