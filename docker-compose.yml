@@ -1,0 +1,77 @@
+version: '3'
+services:
+  sgcc-server:
+    ports:
+      - 8090:8090
+      - 8888:8888
+    build: .
+    env_file:
+      - dev/env.list
+    extra_hosts:
+      - "sgcc-s3.rowenatech.com:172.18.0.1"
+    volumes:
+      - .:/work
+    environment:
+#      - DEBUG=true
+      - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)
+      - if_open_face=1
+    working_dir: /work
+
+#  minio-server:
+#    image: minio/minio
+#    ports:
+#      - '9000:9000'
+#    environment:
+#      - MINIO_ACCESS_KEY=5adL6aCIa0OMaQB6VCH5
+#      - MINIO_SECRET_KEY=V1Q3WsasOavjgG3fu/dalyynsmy+ujusss2h+vdb
+#    restart: always
+#    volumes:
+#      - ./_export_data:/export
+#    command: ["server", "/export"]
+#  sgcc-server-doc:
+#    ports:
+#      - 8888:8888
+#    build: .
+#    env_file:
+#      - dev/env.list
+#    extra_hosts:
+#      - "sgcc-s3.rowenatech.com:172.18.0.1"
+#    volumes:
+#      - .:/work
+#    working_dir: /work
+#    command:
+
+#    command:
+#      - "gunicorn"
+#      - "-k"
+#      - "gevent"
+#      - "sgcc_server.wsgi:application"
+#      - "-b"
+#      - "0.0.0.0:8090"
+#      - "-w"
+#      - "3"
+
+    networks:
+      - app_net
+
+#  sgcc-server:
+#    build: .
+#    env_file:
+#      - dev/env.list
+#    extra_hosts:
+#      - "sgcc-s3.rowenatech.com:172.18.0.1"
+#    volumes:
+#      - .:/work
+#    environment:
+#      - DEBUG=true
+#      - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)
+#      - if_open_face=1
+#    working_dir: /work
+#    command: celery -A sgcc_server.entry.celery_cli  worker  -l info
+#    networks:
+#      - app_net
+
+
+networks:
+  app_net:
+    external: true
