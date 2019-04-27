@@ -1,4 +1,4 @@
-FROM hub.rowenatech.com/build/python-java:2.7-8
+FROM python:3
 
 ARG BUILD_VERSION=1.0.0
 
@@ -6,7 +6,7 @@ COPY . /work
 
 WORKDIR /work
 
-VOLUME /www/sgcc
+VOLUME /www/fresh
 
 RUN echo "VERSION='${BUILD_VERSION}'" > /work/sgcc_server/__init__.py
 
@@ -22,4 +22,4 @@ EXPOSE 8888
 
 ENTRYPOINT ["prod_entrypoint.sh"]
 
-CMD ["sgcc-server-start"]
+CMD ["fresh-server-start"]

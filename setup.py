@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from sgcc_server import VERSION
+from freshProject.freshProject import VERSION
 
 with open('README.md') as f:
     readme = f.read()
@@ -21,23 +21,23 @@ install_packages = []
 
 
 setup(
-    name='sgcc-server',
+    name='fresh-server',
     version=VERSION,
 
     description='Sample package for Python-Guide.org',
     long_description=readme,
-    author='Kenneth Reitz',
-    author_email='me@kennethreitz.com',
-    url='https://github.com/kennethreitz/samplemod',
+    author='DancingSnow',
+    author_email='dancinginmysnow@gmail.com',
+    url='https://github.com/dancingsnow/dailyfresh',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
     package_data = {
-            'sgcc_server':['*.html']
+            'fresh_server':['*.html']
         },
     install_requires=install_packages,
     entry_points={
         'console_scripts': [
-            'sgcc-server-start=sgcc_server.entry:main',
+            'fresh-server-start=sgcc_server.entry:main',
         ]
     }
 )
