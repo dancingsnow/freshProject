@@ -38,11 +38,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'df_user',
-    'df_goods',
+    'freshProject.df_user',
+    'freshProject.df_goods',
     'tinymce', # 富文本编辑器
-    'df_cart',
-    'df_order',
+    'freshProject.df_cart',
+    'freshProject.df_order',
     'haystack', # 属于一种全文检索的框架，为支持whoosh等所搜引擎。
 )
 

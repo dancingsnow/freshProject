@@ -27,14 +27,14 @@ PROGRAM = 'daily_fresh'
 
 def product():
     ip = '0.0.0.0'
-    port = 6666
+    port = 80
     server = WSGIServer((ip, port), application)
     server.serve_forever()
 
 from django.core.management.commands.runserver import BaseRunserverCommand
 def development():
     server = BaseRunserverCommand()
-    server.handle(use_ipv6=False, addrport="0.0.0.0:6666", use_reloader=True, use_threading=False)
+    server.handle(use_ipv6=False, addrport="0.0.0.0:80", use_reloader=True, use_threading=False)
 
 
 if os.environ.get("DEBUG") and os.environ.get("DEBUG_SERVER"):
