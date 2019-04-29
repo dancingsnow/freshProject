@@ -1,6 +1,6 @@
 # coding:utf-8
 from django.conf.urls import url
-import views
+from freshProject.df_cart import views
 
 urlpatterns = [
     url(r'^$',views.cart),

@@ -1,6 +1,7 @@
 # coding:utf-8
 from django.conf.urls import url
-import views
+from freshProject.df_goods import views
+
 urlpatterns = [
     url(r'^no_setting/$',views.noSetting),
     url(r'^$|^index/$',views.index),

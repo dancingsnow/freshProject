@@ -1,6 +1,6 @@
 # coding:utf-8
 from django.conf.urls import url,include
-import views
+from freshProject.df_user import views
 
 urlpatterns = [
     url(r'^register/$',views.register,name='register'), # 注册界面
