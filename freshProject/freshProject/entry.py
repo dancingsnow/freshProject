@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 from gevent import monkey
 import os
-from server_utils.log import log_setup
+# from server_utils.log import log_setup
 
 patch_status = False
 if str(os.environ.get("DEBUG")).lower()!='true' or str(os.environ.get("DEBUG_SERVER")).lower()!='true':
@@ -22,7 +22,7 @@ from freshProject.freshProject.wsgi import application
 
 PROGRAM = 'daily_fresh'
 
-log_setup(PROGRAM)
+# log_setup(PROGRAM)
 
 
 def product():

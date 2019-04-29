@@ -1,8 +1,10 @@
 # coding:utf-8
 from django.shortcuts import render
-from df_user.models import *
-import df_user
-from df_goods.models import *
+# from df_user.models import *
+from freshProject.df_user.models import *
+# import df_user
+from freshProject.df_user.user_decorator import login as user_login
+from freshProject.df_goods.models import *
 from .models import *
 from django.http import *
 
@@ -54,7 +56,7 @@ def add_goods(request):
 
 
 # 购物车界面
-@df_user.user_decorator.login
+@user_login
 def cart(request):
     userid = request.session.get('user_id','')  # user_name
     uname = request.session['user_name']
@@ -72,7 +74,7 @@ def cart(request):
     return render(request,'df_cart/cart.html',context)
 
 # 点击删除后的处理
-@df_user.user_decorator.login
+@user_login
 def del_goods(request,goods_id):
     buy_goods = CartInfo.objects.get(id=goods_id)
     buy_goods.delete()

@@ -2,15 +2,15 @@
 from django.shortcuts import render
 from django.http import *
 from .models import *
-from df_user.models import *
-from df_cart.models import *
-from df_goods.models import *
-import df_user
+from freshProject.df_user.models import *
+from freshProject.df_cart.models import *
+from freshProject.df_goods.models import *
+from freshProject.df_user.user_decorator import login as user_login
 from django.db import transaction
 from datetime import datetime
 
 # order界面
-@df_user.user_decorator.login
+@user_login
 def place_order(request):
 # cart_list = []  # 因为参数是分两次传递过来的，所以为两次访问而list表数据会自动清除情况。用全局变量可以做，但是用户多了，就不能实现。
     # global cart_list
@@ -103,7 +103,7 @@ def place_order(request):
 # 订单完成后的提交
 # 编号:谁的订单、订单日期、订单总金额（可以计算，也可以直接保存）、支付状态、订单的收货地址（付款的时候可能会更改）
 @transaction.atomic()   # django中利用数据库的事务的方式
-@df_user.user_decorator.login
+@user_login
 def order_handle(request):
     # 设置一个回退点
     tran_id = transaction.savepoint()

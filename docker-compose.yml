@@ -2,11 +2,10 @@ version: '3'
 services:
   fresh-server:
     ports:
-      - 8090:8090
       - 8888:8888
     build: .
     env_file:
-      - dev/env.list
+      - .env
     extra_hosts:
       - "www.dailyfresh.com:0.0.0.0"
     volumes:
@@ -16,38 +15,38 @@ services:
       - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)
     working_dir: /work
 
-  mysql:
-    image: "mysql:5.7.20"
-    ports:
-      - 4444:3306
-    environment:
-    - MYSQL_ROOT_PASSWORD=123456
-    - MYSQL_DATABASE=mysql
-    volumes:
-    - ./_db:/var/lib/mysql
-    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
-    networks:
-    - app_net
-
-  adminer:
-    image: "adminer:4.6.2"
-    ports:
-    - 8081:8080
-    networks:
-    - app_net
-
-  redis:
-    image: 'redis:latest'
-
-    volumes:
-    - ./redis_data:/data
-    - ./redis.conf:/usr/local/etc/redis/redis.conf
-    #    ports:
-    #      - 6379:6379
-    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
-    networks:
-    - app_net
+#  mysql:
+#    image: "mysql:5.7.20"
+#    ports:
+#      - 4444:3306
+#    environment:
+#    - MYSQL_ROOT_PASSWORD=123456
+#    - MYSQL_DATABASE=mysql
+#    volumes:
+#    - ./_db:/var/lib/mysql
+#    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+#    networks:
+#    - fresh_net
+#
+#  adminer:
+#    image: "adminer:4.6.2"
+#    ports:
+#    - 8081:8080
+#    networks:
+#    - fresh_net
+#
+#  redis:
+#    image: 'redis:latest'
+#
+#    volumes:
+##    - ./redis_data:/data
+#    - ./redis.conf:/usr/local/etc/redis/redis.conf
+#    #    ports:
+#    #      - 6379:6379
+#    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+#    networks:
+#    - fresh_net
 
 networks:
-  app_net:
+  fresh_net:
     external: true

@@ -6,12 +6,11 @@ cd /work
 if [ "$DEBUG" == "true" ]; then
     echo "use debug mode"
     python setup.py develop
-    db-manage makemigrations
-    db-manage migrate
+#    db-manage makemigrations
+#    db-manage migrate
 else
     echo "use product mode"
 	python setup.py install
-
 fi
 
 python setup.py install

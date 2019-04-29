@@ -19,7 +19,6 @@ install_packages = []
 #     	install_packages.append(line)
 
 
-
 setup(
     name='fresh-server',
     version=VERSION,
@@ -37,7 +36,7 @@ setup(
     install_requires=install_packages,
     entry_points={
         'console_scripts': [
-            'fresh-server-start=sgcc_server.entry:main',
+            'fresh-server-start=freshProject.freshProject.entry:main',
         ]
     }
 )

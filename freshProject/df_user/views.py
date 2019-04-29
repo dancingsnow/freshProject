@@ -3,12 +3,13 @@ from django.shortcuts import render,redirect
 from hashlib import sha1
 from .models import *
 from django.http import *
-from df_order.models import *
-from df_goods.models import *
 # from django.template import RequestContext, loader
-import user_decorator  # 登陆装饰器
+# import user_decorator  # 登陆装饰器
+from freshProject.df_user.user_decorator import login as user_login   # 登陆装饰器
+
 # sys.path.append('..')
-from df_goods.models import *
+# from df_goods.models import *
+from freshProject.df_goods.models import *
 from django.core.paginator import *
 import re
 
@@ -164,7 +165,7 @@ def login_handle_3(request):
 
 
 # 用户中心界面（三合一）=================================
-@user_decorator.login
+@user_login
 def user_center_info(request):  # 默认界面-用户中心-个人信息
     # 防止直接链接的访问。还可以添加登陆的选项
     # try:
@@ -198,7 +199,7 @@ def user_center_info(request):  # 默认界面-用户中心-个人信息
     return render(request,'df_user/user_center_info.html',context)
 
  # 用户中心-全部订单
-@user_decorator.login
+@user_login
 def user_center_order(request,pIndex):  # pIndex为页码指针
     if pIndex == '':  # 不写页码，默认第一页
         pIndex = 1
@@ -226,7 +227,7 @@ def user_center_order(request,pIndex):  # pIndex为页码指针
     return render(request,'df_user/user_center_order.html',context)
 
 # 用户中心-收货地址
-@user_decorator.login
+@user_login
 def user_center_site(request):
     user_id = request.session['user_id']
     uname = request.session.get('user_name')
