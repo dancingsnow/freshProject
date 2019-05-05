@@ -84,11 +84,13 @@ WSGI_APPLICATION = 'freshProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'USER':'root',  # 超级管理员的登陆，也可选择自己的账户登陆
-        'PASSWORD':'******',  # 各自的密码别记混了
-        'HOST':'localhost',
-        'PORT':'3306',
-        'NAME': 'dailyfresh', # 所使用数据库的名字！
+        'NAME': os.environ.get("DB_NAME", "dailyfresh"),  # 所使用数据库的名字！
+        'USER': os.environ.get("DB_USER", 'root'),  # 超级管理员的登陆，也可选择自己的账户登陆
+        'PASSWORD': os.environ.get("DB_PASSWORD", '123456'),  # 各自的密码别记混了
+        # 'HOST': os.environ.get("DB_HOST", 'mysql'),
+        'HOST': os.environ.get("DB_HOST", '0.0.0.0'),
+        'PORT': os.environ.get("DB_NAME", '4445'),
+        'OPTIONS': {'charset': 'utf8mb4'}  # 避免mysql的utf8的bug，以及表情等特殊字符
     }
 }
 
@@ -130,7 +132,8 @@ TINYMCE_DEFAULT_CONFIG = {
 # 全文检索，搜索引擎
 HAYSTACK_CONNECTIONS = {
     'default': {
-        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        # 'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',   # todo 这里需要更改底层whoosh代码，确认下docker内怎么实现
+        'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
         'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     }
 }
