@@ -26,11 +26,11 @@ SECRET_KEY = 'f2jq$_wfcpvhqnz(whkf(r457%2i3o-^0!bn#%84v3!)9!2#0^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
+# from django.contrib import staticfiles
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -89,7 +89,7 @@ DATABASES = {
         'PASSWORD': os.environ.get("DB_PASSWORD", '123456'),  # 各自的密码别记混了
         # 'HOST': os.environ.get("DB_HOST", 'mysql'),
         'HOST': os.environ.get("DB_HOST", '0.0.0.0'),
-        'PORT': os.environ.get("DB_NAME", '4444'),
+        'PORT': os.environ.get("DB_NAME", '4445'),
         'OPTIONS': {'charset': 'utf8mb4'}   # 避免mysql的utf8的bug，以及表情等特殊字符
     }
 }
@@ -113,12 +113,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'static')
+    os.path.join(BASE_DIR,'/static'),
 ]
 
 # 上传文件的存储路径，这是开发阶段要用的。
 MEDIA_ROOT=os.path.join(BASE_DIR,"static/media")
 
+
+# 这里定义了静态文件的根目录，然后利用python manage.py collectstatic命令，将admin需要的静态文件，进行收集过来
+# STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # 添加部署时的静态文件的存储目录.等项目创建完成后，把静态文件收集到对应目录。
 # STATIC_ROOT='/var/www/dailyfresh/static/'
 

@@ -1,0 +1,37 @@
+version: '3'
+services:
+  mysql:
+    image: "mysql:5.7.20"
+    ports:
+      - 4445:3306
+    environment:
+    - MYSQL_ROOT_PASSWORD=123456
+    - MYSQL_DATABASE=mysql
+    volumes:
+    - ./_db:/var/lib/mysql
+    command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci]
+    networks:
+    - fresh_net
+
+  adminer:
+    image: "adminer:4.6.2"
+    ports:
+    - 4446:8080
+    networks:
+    - fresh_net
+
+  redis:
+    image: 'redis:latest'
+
+    volumes:
+#    - ./redis_data:/data
+    - ./redis.conf:/usr/local/etc/redis/redis.conf
+    #    ports:
+    #      - 4447:6379
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+    - fresh_net
+
+networks:
+  fresh_net:
+    external: true

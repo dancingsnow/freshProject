@@ -34,7 +34,7 @@ def product():
 from django.core.management.commands.runserver import BaseRunserverCommand
 def development():
     server = BaseRunserverCommand()
-    server.handle(use_ipv6=False, addrport="0.0.0.0:9999", use_reloader=True, use_threading=False)
+    server.handle(use_ipv6=False, addrport="0.0.0.0:4444", use_reloader=True, use_threading=False)
 
 
 if os.environ.get("DEBUG") and os.environ.get("DEBUG_SERVER"):
