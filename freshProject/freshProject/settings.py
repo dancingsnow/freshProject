@@ -13,9 +13,12 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import logging
+logger = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+logger.info("[ BASE_DIR ] '%s' "%BASE_DIR)
+print("[ BASE_DIR ] '%s' "%BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -113,7 +116,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'/static'),
+    # os.path.join(BASE_DIR,'static'),
+    "/Users/rowena/snowFile/www/dailyfresh/static/"
 ]
 
 # 上传文件的存储路径，这是开发阶段要用的。
@@ -124,6 +128,7 @@ MEDIA_ROOT=os.path.join(BASE_DIR,"static/media")
 # STATIC_ROOT = os.path.join(BASE_DIR,'static')
 # 添加部署时的静态文件的存储目录.等项目创建完成后，把静态文件收集到对应目录。
 # STATIC_ROOT='/var/www/dailyfresh/static/'
+# STATIC_ROOT='/Users/rowena/snowFile/www/dailyfresh/static/'
 
 # 富文本编辑器
 TINYMCE_DEFAULT_CONFIG = {
