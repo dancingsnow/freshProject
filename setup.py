@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from setuptools import setup, find_packages
-from freshProject.freshProject import VERSION
+from freshProject import VERSION
 
 with open('README.md') as f:
     readme = f.read()
@@ -27,7 +27,7 @@ setup(
     long_description=readme,
     author='DancingSnow',
     author_email='dancinginmysnow@gmail.com',
-    url='https://github.com/dancingsnow/dailyfresh',
+    url='https://github.com/dancingsnow/freshProject',
     license=license,
     packages=find_packages(exclude=('tests', 'docs')),
     package_data = {
@@ -36,7 +36,7 @@ setup(
     install_requires=install_packages,
     entry_points={
         'console_scripts': [
-            'fresh-server-start=freshProject.freshProject.entry:main',
+            'fresh-server-start=freshProject.entry:main',
         ]
     }
 )

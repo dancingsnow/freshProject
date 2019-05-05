@@ -1,0 +1,281 @@
+{% extends 'df_goods/base.html' %}
+
+{% block middle_body %}
+	<div class="navbar_con">
+		<div class="navbar">
+			<h1 class="fl">全部商品分类</h1>
+			<ul class="navlist fl">
+				<li><a href="/">首页</a></li>
+				<li class="interval">|</li>
+				<li><a href="/no_setting/">手机生鲜</a></li>
+				<li class="interval">|</li>
+				<li><a href="/no_setting/">抽奖</a></li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="center_con clearfix">
+		<ul class="subnav fl">
+			<li><a href="/list/1_1_1/" class="fruit">新鲜水果</a></li>
+			<li><a href="/list/2_1_1/" class="seafood">海鲜水产</a></li>
+			<li><a href="/list/3_1_1/" class="meet">猪牛羊肉</a></li>
+			<li><a href="/list/4_1_1/" class="egg">禽类蛋品</a></li>
+			<li><a href="/list/5_1_1/" class="vegetables">新鲜蔬菜</a></li>
+			<li><a href="/list/6_1_1/" class="ice">速冻食品</a></li>
+		</ul>
+		<div class="slide fl">
+			<ul class="slide_pics">
+				<li><img src="/static/images/slide.jpg" alt="幻灯片"></li>
+				<li><img src="/static/images/slide02.jpg" alt="幻灯片"></li>
+				<li><img src="/static/images/slide03.jpg" alt="幻灯片"></li>
+				<li><img src="/static/images/slide04.jpg" alt="幻灯片"></li>
+			</ul>
+			<div class="prev"></div>
+			<div class="next"></div>
+			<ul class="points"></ul>
+		</div>
+		<div class="adv fl">   <!--广告图片加载-->
+			<a href="{{adv01_link}}"><img src="/static/media/{{adv01}}"></a>
+			<a href="{{adv02_link}}"><img src="/static/media/{{adv02}}"></a>
+		</div>
+	</div>
+
+
+
+<!--水果===========================================-->
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model01">新鲜水果</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for fruit in fruits_word%}
+					<a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/">{{fruit.gtitle}}</a> <!--鲜芒 加州提子  亚马逊牛油果-->
+				{% endfor %}
+			</div>
+			<a href="/list/1_1_1/" class="goods_more fr" id="fruit_more">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner01.jpg"></div>
+			<ul class="goods_list fl">
+				{% for fruit in fruits %}
+					<li>
+						<h4><a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/">{{fruit.gtitle}}</a></h4>
+						<a href="/detail/{{fruit.gtype.id}}_{{fruit.id}}/"><img src="/static/media/{{fruit.gpic}}"></a>
+						<div class="prize">¥ {{fruit.gprice}}</div>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+
+<!--海鲜水产===========================================-->
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model02">海鲜水产</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				{% for sea in sea_word%}
+					<a href="/detail/{{sea.gtype.id}}_{{sea.id}}/">{{sea.gtitle}}</a> <!-- 海鲜文字 -->
+				{% endfor %}
+			</div>
+			<a href="/list/2_1_1/" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner02.jpg"></div>
+			<ul class="goods_list fl">
+				{% for s in sea %}
+					<li>
+						<h4><a href="/detail/{{s.gtype.id}}_{{s.id}}/">{{s.gtitle}}</a></h4>
+						<a href="/detail/{{s.gtype.id}}_{{s.id}}/"><img src="/static/media/{{s.gpic}}"></a>
+						<div class="prize">¥ {{s.gprice}}</div>
+					</li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+
+
+<!--还有猪牛羊肉、禽类蛋品、新鲜蔬菜、速冻食品等模块，同样的方式！(这里一下直接出的模板，没有数据库内容)============================-->
+<br>
+<div style="color:red;width: 1200px;height:60px; margin: auto;text-align: center;line-height: 60px;">@!====================以下内容，无具体数据，仅为模板！====================华丽的分割线====================!@</div>
+<br>
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model03">猪牛羊肉</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				<a href="#">鲜芒</a>
+				<a href="#">加州提子</a>
+				<a href="#">亚马逊牛油果</a>
+			</div>
+			<a href="#" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner03.jpg"></div>
+			<ul class="goods_list fl">
+				<li>
+					<h4><a href="#">维多利亚葡萄维多利亚葡萄维多利亚葡萄维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model04">禽类蛋品</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				<a href="#">鲜芒</a>
+				<a href="#">加州提子</a>
+				<a href="#">亚马逊牛油果</a>
+			</div>
+			<a href="#" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner04.jpg"></div>
+			<ul class="goods_list fl">
+				<li>
+					<h4><a href="#">维多利亚葡萄维多利亚葡萄维多利亚葡萄维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model05">新鲜蔬菜</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				<a href="#">鲜芒</a>
+				<a href="#">加州提子</a>
+				<a href="#">亚马逊牛油果</a>
+			</div>
+			<a href="#" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner05.jpg"></div>
+			<ul class="goods_list fl">
+				<li>
+					<h4><a href="#">维多利亚葡萄维多利亚葡萄维多利亚葡萄维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="list_model">
+		<div class="list_title clearfix">
+			<h3 class="fl" id="model06">速冻食品</h3>
+			<div class="subtitle fl">
+				<span>|</span>
+				<a href="#">鲜芒</a>
+				<a href="#">加州提子</a>
+				<a href="#">亚马逊牛油果</a>
+			</div>
+			<a href="#" class="goods_more fr">查看更多 ></a>
+		</div>
+
+		<div class="goods_con clearfix">
+			<div class="goods_banner fl"><img src="/static/images/banner06.jpg"></div>
+			<ul class="goods_list fl">
+				<li>
+					<h4><a href="#">维多利亚葡萄维多利亚葡萄维多利亚葡萄维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+				<li>
+					<h4><a href="#">维多利亚葡萄</a></h4>
+					<a href="#"><img src="/static/images/goods.jpg"></a>
+					<div class="prize">¥ 38.00</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+{% endblock middle_body%}
+
+{% block bottom_js%}
+	<!--<script type="text/javascript" src="js/slideshow.js"></script>-->
+	<!--不知道是干啥的-->
+	<!--<script type="text/javascript">-->
+		<!--BCSlideshow('focuspic');-->
+		<!--var oFruit = document.getElementById('fruit_more');-->
+		<!--var oShownum = document.getElementById('show_count');-->
+
+		<!--var hasorder = localStorage.getItem('order_finish');-->
+
+		<!--if(hasorder)-->
+		<!--{-->
+			<!--oShownum.innerHTML = '2';-->
+		<!--}-->
+
+		<!--oFruit.onclick = function(){-->
+			<!--window.location.href = 'list.html';-->
+		<!--}-->
+	<!--</script>-->
+{% endblock bottom_js%}

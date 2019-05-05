@@ -1,0 +1,93 @@
+{% extends 'df_goods/base_list_detail.html' %}
+
+{% block head %}
+<script type="text/javascript">
+	$(function () {
+	    // '+1'初始化为隐藏状态
+        $('.add_cart_ani').hide();
+        // 点击购物车图标
+		$('.add_goods').click(function () {
+            $(this).parent().next().fadeIn();  // 淡入淡出
+            $(this).parent().next().fadeOut();
+			// 点加入购物车，添加到数据库数字（获得对应数据，发送）
+			var goods_id = $(this).attr('name');  //商品的id(在家标签内，将name属性定义为了id的字符串)
+			$.get('/cart/add_goods/',{'goods_id':goods_id,'goods_num':1},function (data) {
+                if (data.user_exist == '0'){
+					window.location.href="/user/login/"   // 用于当没有用户登陆时的重定向
+				}
+				$('#show_count').html(data.cart_count);
+            });  //list界面，点一下加入购物车，默认数量加一
+		});
+    });
+	//还可添加购物车的动画
+</script>
+{% endblock head %}
+
+
+
+{% block little_boddy %}
+<!--还可以把DTL语言完全写到标签内!!!!!!!!!!!!!!!!!!!!!!========!!!!!!!!!!-->
+		<!--sort分类排序方式，点击其中一种排排序方式后，都默认打开展示第一页-->
+		<div class="r_wrap fr clearfix">
+			<div class="sort_bar">
+				<a href="/list/{{type.id}}_1_1/"
+				   {% if sort_num == '1' %}
+				   		class="active"
+				   {% endif %}
+				>默认</a>
+				<a href="/list/{{type.id}}_2_1/"
+					{% if sort_num == '2' %}
+				   		class="active"
+				    {% endif %}
+				>价格</a>
+				<a href="/list/{{type.id}}_3_1/"
+					{% if sort_num == '3' %}
+				   		class="active"
+				    {% endif %}
+				>人气</a>
+			</div>
+<!--=============数据展示!!!!!!!!!!!!!!!!====================-->
+			<ul class="goods_type_list clearfix">
+				<!--遍历当前页，通过page对象得到的数据 -->
+				{% for info in page %}
+					<li>			<!--根据商品所属类别的id和自己的id得到对应详情页。-->
+						<a href="/detail/{{info.gtype.id}}_{{info.id}}/"><img src="/static/media/{{info.gpic}}"></a>
+                        <h4><a href="/detail/{{info.gtype.id}}_{{info.id}}/">{{info.gtitle}}</a></h4>
+						<div class="operate">
+							<span class="prize">￥{{info.gprice}}</span>
+							<span class="unit">{{info.gprice}}/{{info.gunit}}</span>
+							<a href="javascript:;" class="add_goods" name="{{info.id}}" title="加入购物车"></a>
+						</div>
+                        <span class="add_cart_ani">+1</span>
+					</li>
+				{% endfor %}
+
+			</ul>
+
+			<!--分页-->
+			<div class="pagenation">
+											<!--在python语句中方法执行，一定加（），
+											在DTL中，不能加，不然会报错
+											“Could not parse the remainder: '()' from 'page.previous_page_number()'”-->
+				{% if page.has_previous %}
+					<a href="/list/{{type.id}}_{{sort_num}}_{{page.previous_page_number}}/"><上一页</a>
+				{% endif %}
+
+				{% for pindex in p.page_range %}
+					{% if pindex == page.number %}
+						<a class="active">{{pindex}}</a>   <!--把herf属性去掉，界面图标便无法点击-->
+					{% else %}
+						<a href="/list/{{type.id}}_{{sort_num}}_{{pindex}}/">{{pindex}}</a>
+					{% endif %}
+				{% endfor %}
+
+				{% if page.has_next %}
+					<a href="/list/{{type.id}}_{{sort_num}}_{{page.next_page_number}}/">下一页></a>
+				{% endif %}
+
+			</div>
+		</div>
+
+
+{% endblock little_boddy %}
+

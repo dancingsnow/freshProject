@@ -3,11 +3,11 @@ services:
   fresh-server:
     ports:
       - 4444:80  # 左边是宿主机端口，右边docker内部端口
-    build: .
+    build: ""
     env_file:
       - .env
     extra_hosts:
-      - "www.dailyfresh.com:0.0.0.0"   # 左边域名，右边域名解析地址，只是给docker用的。外边向内访问，只能是通过宿主机的host文件做操作。
+      - "www.freshProjectaaaaa.com:0.0.0.0"   # 左边域名，右边域名解析地址，只是给docker用的。外边向内访问，只能是通过宿主机的host文件做操作。
     volumes:
       - .:/work   # 映射docker内部文件夹
     environment:

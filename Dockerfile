@@ -2,7 +2,7 @@ FROM python:3.6
 
 ARG BUILD_VERSION=1.0.0
 
-COPY . /work
+COPY .. /work
 
 WORKDIR /work
 
