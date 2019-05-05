@@ -67,9 +67,9 @@ def index(request,loadin,uname,cart_count):
 # 两个广告位的链接
 def adv_link(request,num):
     print(num)
-    if num == 01:
+    if num == '01':
         return HttpResponse('这是广告一的跳转！')
-    elif num == 02:
+    elif num == '02':
         return HttpResponse('这是广告二的跳转！')
     else:
         return HttpResponse('广告跳转还未定义，为原始的‘/adv/#/‘')

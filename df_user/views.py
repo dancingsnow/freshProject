@@ -6,7 +6,7 @@ from django.http import *
 from df_order.models import *
 from df_goods.models import *
 # from django.template import RequestContext, loader
-import user_decorator  # 登陆装饰器
+from df_user import user_decorator # 登陆装饰器
 # sys.path.append('..')
 from df_goods.models import *
 from django.core.paginator import *

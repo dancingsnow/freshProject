@@ -1,6 +1,6 @@
 # coding:utf-8
 from django.conf.urls import url
-import views
+from df_order import views
 
 urlpatterns = [
     url(r'^place_order/',views.place_order),
