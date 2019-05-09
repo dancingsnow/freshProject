@@ -26,7 +26,8 @@ SECRET_KEY = 'f2jq$_wfcpvhqnz(whkf(r457%2i3o-^0!bn#%84v3!)9!2#0^'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -87,9 +88,9 @@ DATABASES = {
         'NAME': os.environ.get("DB_NAME", "dailyfresh"),  # 所使用数据库的名字！
         'USER': os.environ.get("DB_USER", 'root'),  # 超级管理员的登陆，也可选择自己的账户登陆
         'PASSWORD': os.environ.get("DB_PASSWORD", '123456'),  # 各自的密码别记混了
-        # 'HOST': os.environ.get("DB_HOST", 'mysql'),
-        'HOST': os.environ.get("DB_HOST", '0.0.0.0'),
-        'PORT': os.environ.get("DB_NAME", '4445'),
+        'HOST': os.environ.get("DB_HOST", 'mysql'),
+        # 'HOST': os.environ.get("DB_HOST", '0.0.0.0'),
+        'PORT': os.environ.get("DB_NAME", '3306'),
         'OPTIONS': {'charset': 'utf8mb4'}  # 避免mysql的utf8的bug，以及表情等特殊字符
     }
 }

@@ -2,14 +2,14 @@ version: '3'
 services:
   fresh-server:
     ports:
-      - 4444:80  # 左边是宿主机端口，右边docker内部端口
-    build: ""
+      - 4444:4444  # 左边是宿主机端口，右边docker内部端口
+    build: .
     env_file:
       - .env
-    extra_hosts:
-      - "www.freshProjectaaaaa.com:0.0.0.0"   # 左边域名，右边域名解析地址，只是给docker用的。外边向内访问，只能是通过宿主机的host文件做操作。
+#    extra_hosts:
+#      - "www.freshProject.com:0.0.0.0"   # 左边域名，右边域名解析地址，只是给docker用的。外边向内访问，只能是通过宿主机的host文件做操作。
     volumes:
-      - .:/work   # 映射docker内部文件夹
+      - .:/work   # 映射docker容器内部文件夹
     environment:
       - DEBUG=true
 #      - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)

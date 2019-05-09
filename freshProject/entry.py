@@ -4,7 +4,21 @@ import logging
 logger = logging.getLogger(__name__)
 from gevent import monkey
 import os
-# from server_utils.log import log_setup
+
+def log_setup(progname, add_logger_name=True):
+    syslogfmt = progname + '[%%(process)d]: [%%(levelname)s] %s%%(message)s' % (
+    '%(name)s - ' if add_logger_name else '')
+    config = lambda x: logging.basicConfig(level=x, format='%(asctime)s ' + syslogfmt)
+    # if args.log_config:
+    #     logging.config.fileConfig(args.log_config)
+
+    log_level = os.environ.get('LOG_LEVEL', 'INFO')
+    config(log_level)
+
+    logger = logging.getLogger(__name__)
+
+    logger.info('The log level is %s' % log_level)
+
 
 patch_status = False
 if str(os.environ.get("DEBUG")).lower()!='true' or str(os.environ.get("DEBUG_SERVER")).lower()!='true':
@@ -22,7 +36,7 @@ from freshProject.wsgi import application
 
 PROGRAM = 'daily_fresh'
 
-# log_setup(PROGRAM)
+log_setup(PROGRAM)
 """
 一、 django-runserver的部分实现(基类)
         - 实现了AutoReload机制（可设置）
@@ -59,10 +73,12 @@ PROGRAM = 'daily_fresh'
         - 其他请求，靠uwsgi、gevent-server等应用服务器来实现
 """
 
+ip = '0.0.0.0'
+port = 4444
+
 def product():
-    ip = '0.0.0.0'
-    port = 4444
     server = WSGIServer((ip, port), application)
+    logger.info('Running PRODUCT on http://%s:%d/' % (ip, port))
     server.serve_forever()
 
 
@@ -73,8 +89,8 @@ def development():
     # server = BaseRunserverCommand()
     # server.handle(use_ipv6=False, addrport="0.0.0.0:4444", use_reloader=True, use_threading=False)
     server = DebugServer()
-    server.handle(use_ipv6=False, addrport="0.0.0.0:4444", use_reloader=True, use_threading=False)
-
+    logger.info('Running DEBUG on http://%s:%d/' % (ip, port))
+    server.handle(use_ipv6=False, addrport="%s:%s"%(ip, port), use_reloader=True, use_threading=False)
 
 
 if os.environ.get("DEBUG") and os.environ.get("DEBUG_SERVER"):
@@ -86,5 +102,4 @@ logger.info(">>>>>>>>> RUN MODE >>>>>>>>>>>>：%s" %str(main.__name__))
 logger.info(">>>>>>>>> patch_status >>>>>>>>>>>>：%s" %str(patch_status))
 
 if __name__ == '__main__':
-    # main()
-    development()
+    main()
