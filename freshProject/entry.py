@@ -68,7 +68,7 @@ django WSGIServer的位置：
 
 三、gevent的WSGIServer的实现
         - 协程异步接口实现
-        - 静态文件处理未实现？ todo 待确认
+        - 普通WSGI协议实现，不调用静态文件处理handler
         
     from gevent.pywsgi import WSGIServer
     from freshProject.wsgi import application
