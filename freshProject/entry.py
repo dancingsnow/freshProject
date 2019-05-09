@@ -37,10 +37,17 @@ from freshProject.wsgi import application
 PROGRAM = 'daily_fresh'
 
 log_setup(PROGRAM)
+
 """
+先搞清 WSGI application(handler)  /  WSGI Server 的区别与联系
+    - WSGI Server负责获取http请求，将请求传递给WSGI application，由application处理请求后返回response
+    
+django WSGIServer的位置：
+    - from django.core.servers.basehttp import run, WSGIServer
+
 一、 django-runserver的部分实现(基类)
         - 实现了AutoReload机制（可设置）
-        - 不包含静态文件的处理handler
+        - 不包含静态文件的处理handler（WSGI application）
         - 可处理普通接口，不支持静态文件/static/路径访问
 
     from django.core.management.commands.runserver import BaseRunserverCommand
@@ -51,7 +58,8 @@ log_setup(PROGRAM)
 
 二、django-runserver的完全实现
         - 实现了AutoReload机制（可设置）
-        - 并且添加了StaticFilesHandler的静态文件的处理handler，
+        - 并且添加了StaticFilesHandler的静态文件的处理handler
+        - StaticFilesHandler继承自基本的WSGIhandler（WSGI application），实现接口请求响应，并添加了静态文件的处理
         - 当服务器启动，等于 Python manage.py runserver
 
     from django.contrib.staticfiles.management.commands.runserver import Command as DebugServer
@@ -81,7 +89,7 @@ def product():
     logger.info('Running PRODUCT on http://%s:%d/' % (ip, port))
     server.serve_forever()
 
-
+from django.core.wsgi import WSGIHandler
 from django.contrib.staticfiles.management.commands.runserver import Command as DebugServer
 # from django.core.management.commands.runserver import BaseRunserverCommand
 

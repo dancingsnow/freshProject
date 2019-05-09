@@ -12,7 +12,7 @@ services:
       - .:/work   # 映射docker容器内部文件夹
     environment:
       - DEBUG=true
-#      - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)
+      - DEBUG_SERVER=true   # 用于服务器auto reload模式指定(非开发模式，请勿开启)
     working_dir: /work
     networks:
     - fresh_net
