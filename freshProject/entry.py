@@ -81,6 +81,7 @@ django WSGIServer的位置：
         - 其他请求，靠uwsgi、gevent-server等应用服务器来实现
 """
 
+# ip = 'localhost'
 ip = '0.0.0.0'
 port = 4444
 
@@ -89,16 +90,17 @@ def product():
     logger.info('Running PRODUCT on http://%s:%d/' % (ip, port))
     server.serve_forever()
 
-from django.core.wsgi import WSGIHandler
-from django.contrib.staticfiles.management.commands.runserver import Command as DebugServer
+# from django.core.wsgi import WSGIHandler
+from django.contrib.staticfiles.management.commands.runserver import Command
 # from django.core.management.commands.runserver import BaseRunserverCommand
 
 def development():
     # server = BaseRunserverCommand()
-    # server.handle(use_ipv6=False, addrport="0.0.0.0:4444", use_reloader=True, use_threading=False)
-    server = DebugServer()
+    server = Command()
     logger.info('Running DEBUG on http://%s:%d/' % (ip, port))
-    server.handle(use_ipv6=False, addrport="%s:%s"%(ip, port), use_reloader=True, use_threading=False)
+    server.handle(use_ipv6=False, addrport="%s:%s"%(ip, port),
+                  use_reloader=True, use_threading=False,
+                  use_static_handler=True, insecure_serving=True)
 
 
 if os.environ.get("DEBUG") and os.environ.get("DEBUG_SERVER"):
@@ -110,4 +112,5 @@ logger.info(">>>>>>>>> RUN MODE >>>>>>>>>>>>：%s" %str(main.__name__))
 logger.info(">>>>>>>>> patch_status >>>>>>>>>>>>：%s" %str(patch_status))
 
 if __name__ == '__main__':
-    main()
+    # main()
+    development()
