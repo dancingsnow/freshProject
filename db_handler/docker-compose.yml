@@ -26,8 +26,8 @@ services:
     volumes:
 #    - ./redis_data:/data
     - ./redis.conf:/usr/local/etc/redis/redis.conf
-    #    ports:
-    #      - 4447:6379
+    ports:
+      - 4447:6379
     command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     networks:
     - fresh_net

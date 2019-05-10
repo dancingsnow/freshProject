@@ -6,6 +6,8 @@ from django.core.paginator import Paginator
 from df_cart.models import *
 from haystack.views import SearchView
 
+# todo 代码未做数据容错处理，强行取得数据切片。初始要先加下数据才行
+
 # 未设置地址的链接
 def noSetting(request):
     return HttpResponse('这个链接还未定义！')
@@ -18,7 +20,6 @@ def login_ensure(func):
             loadin = 1
             uname = request.session.get('user_name')
             cart_count = CartInfo.objects.filter(buy_user_id=user_id).count()
-
         else:
             loadin = 0
             uname = ''
@@ -47,10 +48,10 @@ def index(request,loadin,uname,cart_count):
         'loadin':loadin,
         'uname':uname,
         'cart_count':cart_count,
-        'adv01_link':adv[0].alink,
-        'adv02_link':adv[1].alink,
-        'adv01':adv[0].apic,
-        'adv02':adv[1].apic,
+        'adv01_link':adv[0].alink if len(adv)>=2 else "",
+        'adv02_link':adv[1].alink  if len(adv)>=2 else "",
+        'adv01':adv[0].apic if len(adv)>=2 else "",
+        'adv02':adv[1].apic if len(adv)>=2 else "",
         'fruits_word':fruits_word[0:3],
         'fruits':fruits[0:4],
         'sea_word': sea_word[0:3],

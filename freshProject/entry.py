@@ -99,7 +99,7 @@ def development():
     server = Command()
     logger.info('Running DEBUG on http://%s:%d/' % (ip, port))
     server.handle(use_ipv6=False, addrport="%s:%s"%(ip, port),
-                  use_reloader=True, use_threading=False,
+                  use_reloader=True, use_threading=True,
                   use_static_handler=True, insecure_serving=True)
 
 
