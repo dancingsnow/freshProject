@@ -27,5 +27,6 @@ docker-compose up --build
     - 创建数据库`dailyfresh`，字符集选择`utf8mb4_unicode_ci`
 3. 执行`python manage.py migrate`进行数据库建表
 4. 执行`python manage.py createsuperuser`创建超级用户
+5. 执行`python manage.py rebuild_index`初始化haystack索引数据
 5. 访问http://0.0.0.0:4444/admin/  可进入admin后台
 6. 访问首页会报错，因为数据库没有数据。这里loaddata还没写。。。

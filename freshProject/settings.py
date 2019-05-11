@@ -44,7 +44,7 @@ INSTALLED_APPS = (
     'tinymce', # 富文本编辑器
     'df_cart',
     'df_order',
-    'haystack', # 属于一种全文检索的框架，为支持whoosh等所搜引擎。
+    # 'haystack', # 属于一种全文检索的框架，为支持whoosh等所搜引擎。
 )
 
 MIDDLEWARE_CLASSES = (
