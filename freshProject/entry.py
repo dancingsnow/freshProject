@@ -111,6 +111,7 @@ else:
 logger.info(">>>>>>>>> RUN MODE >>>>>>>>>>>>：%s" %str(main.__name__))
 logger.info(">>>>>>>>> patch_status >>>>>>>>>>>>：%s" %str(patch_status))
 
+
 if __name__ == '__main__':
     # main()
     development()
