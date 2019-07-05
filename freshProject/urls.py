@@ -25,5 +25,4 @@ urlpatterns = [
     url(r'^cart/',include('df_cart.urls')), # 购物车
     url(r'^order/',include('df_order.urls')), # 订单
     # url(r'^search/',include('haystack.urls')),  # 全文检索
-
 ]
