@@ -6,7 +6,7 @@ django-celery==3.1.17
 django-haystack==2.8.1
 # django-haystack==2.5.1
 django-tinymce==2.8.0
-arrow==0.13.1
+arrow==0.15.1
 whoosh==2.7.4
 jieba
 redis==3.2.1
