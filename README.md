@@ -30,3 +30,4 @@ docker-compose up --build
 5. 执行`python manage.py rebuild_index`初始化haystack索引数据
 5. 访问http://0.0.0.0:4444/admin/  可进入admin后台
 6. 访问首页会报错，因为数据库没有数据。这里loaddata还没写。。。
+master-456
